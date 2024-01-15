@@ -14,14 +14,9 @@ declare module '@mui/material/styles' {
     }
   }  
 
-export const theme = createTheme(
-    {
-        spacing: 4,
-        palette: {
-            mode: "dark",
-            secondary: {
-                main: "#44EE11"
-            }
-        }
-    }
-);
+export const theme = createTheme({
+  spacing:4,
+  palette: {
+    mode: "dark"
+  }
+})

@@ -1,9 +1,11 @@
+'use client'
 import React, { PropsWithChildren } from 'react'
-import { theme } from './theme'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { CssBaseline, ThemeProvider as MuiThemeProvider } from "@mui/material"
 
-const ThemeProvider = ({ children } : PropsWithChildren) => {
+import { theme } from './theme'
+
+export const ThemeProvider = ({ children } : PropsWithChildren) => {
   return (
     <AppRouterCacheProvider>
         <MuiThemeProvider theme={theme}>
@@ -13,4 +15,3 @@ const ThemeProvider = ({ children } : PropsWithChildren) => {
   )
 }
 
-export default ThemeProvider;
