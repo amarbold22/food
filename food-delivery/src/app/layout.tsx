@@ -1,6 +1,7 @@
 import Header from '@/components/Header'
-import './globals.css'
+import './scss/globals.scss'
 import { ThemeProvider  } from '@/theme'
+import { UserProvider } from '@/context/UserProvider'
 import Footer from '@/components/Footer'
 
 export default function RootLayout({
@@ -11,9 +12,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Header/>
-        <ThemeProvider>{children}</ThemeProvider>
-        <Footer/>
+        
+        <ThemeProvider>
+          <UserProvider>
+            <Header/>
+              {children}
+            <Footer/>
+          </UserProvider>
+        </ThemeProvider> 
       </body>
     </html>
   )
