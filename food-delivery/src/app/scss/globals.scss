@@ -1,0 +1,30 @@
+@import 'variables.scss';
+@import 'mixin.scss';
+
+.wrapper{
+    background: violet;
+    
+    &-top{
+        @include backgroundColor(dodgerblue);
+
+        h1{
+            color: $primary-color;
+        }
+    }
+
+    &-bottom{
+        @include backgroundColor(red);
+
+        h1{
+            color: $secondary-color;
+        }
+    }
+}
+
+.btn-primary{
+    @include button_bg(green);
+}
+
+
+
+
