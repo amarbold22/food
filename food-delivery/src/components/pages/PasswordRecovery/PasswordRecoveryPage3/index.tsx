@@ -1,19 +1,17 @@
-import Button from '@/components/CORE/Button';
-import { Input } from '@/components/CORE/Input';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
-import React from 'react';
+"use client"
+import Button from "@/components/CORE/Button";
+import { Input } from "@/components/CORE/Input";
+import { Box, Container, Stack, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, useState } from "react";
+import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import { object, string, ref } from "yup";
-import Swal from "sweetalert2";
-import { useRouter } from 'next/navigation';
-
+import PasswordRecoveryPage1 from "../PasswordRecoveryPage1";
 
 interface IStepProps {
   email: string;
-};
+}
 
 const validationSchema = object({
   password: string()
@@ -25,7 +23,7 @@ const validationSchema = object({
     .required("Нууц үгийг заавал оруулна уу"),
 });
 
-const PasswordRecoveryPage3 = ({ email } : IStepProps) => {
+const PasswordRecoveryPage3 = ({ email }: IStepProps) => {
   const router = useRouter();
 
   const formik = useFormik({
@@ -45,13 +43,32 @@ const PasswordRecoveryPage3 = ({ email } : IStepProps) => {
       text: "та шинэ нууц үгээ ашиглан нэвтэрнэ үү",
       icon: "success",
     });
-    // router.replace("/login");
+    router.replace("/login");
   };
 
   return (
-    <Box sx={{ maxWidth: "550px", mx: "auto", my: "110px"}}>
-        <Stack sx={{background: "", p: "32px"}}>
-          <Typography textAlign="center" sx={{fontSize: "30px", fontWeight: "bold"}}>Шинээр нууц үг зохиох</Typography>
+    <Container>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+          justifyContent: "center",
+          margin: "auto ",
+          px: "2.1rem",
+          maxWidth: "450px",
+          padding: "5rem 0",
+        }}
+      >
+        <Typography
+          align="center"
+          gutterBottom
+          sx={{ fontSize: "28px", fontWeight: "700" }}
+        >
+          Шинэ нууц үг cэргээх
+        </Typography>
+
+        <Stack width="100%" sx={{ mb: "2rem" }}>
           <Input
             value={formik.values.password}
             errorText={formik.errors.password}
@@ -68,12 +85,11 @@ const PasswordRecoveryPage3 = ({ email } : IStepProps) => {
             showPassword
             onChange={formik.handleChange}
           />
-          <Link href="step3" my={5} underline="none">
-            <Button label="Үргэлжлүүлэх" disabled={false} btnType="contained"></Button>
-          </Link>
+          <Button label={"Сэргээх"} disabled={false} onClick={formik.handleSubmit} />
         </Stack>
-    </Box>
-  )
+      </Box>
+    </Container>
+  );
 };
 
 export default PasswordRecoveryPage3;

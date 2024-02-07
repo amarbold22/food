@@ -12,36 +12,92 @@ import { useFormik } from 'formik';
 
 
 const validationSchema = yup.object({
+  name: yup.string().required("Нэрийг заавал бөглөнө үү."),
   email: yup
     .string()
-    .max(100, "И-мейл хаяг 100 тэмдэгтээс хэтрэхгүй байна")
-    .required("И-мейл хаягийг заавал бөглөнө үү")
-    .matches(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@gmail[A-Za-z0-9.-]+$/, "Та зөвхөн gmail оруулна"),
+    .max(100, "Имэйл хаяг 100 тэмдэгтээч хэтрэхгүй байна.")
+    .required("Имэйл хаягыг заавал бөглөнө үү.")
+    .email("Хүчинтэй имэйл хаяг байх ёстой")
+    .matches(
+      /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@gmail[A-Za-z0-9.-]+$/,
+      "Та зөвхөн gmail хаяг оруулна"
+    ),
+  address: yup.string().required("Хаягийг заавал бөглөнө үү."),
   password: yup
     .string()
-    .required()
-    .min(6, "Нууц үг хамгийн багадаа 6 тэмдэгт байх ёстой.")
+    .required("Нууц үгээ заавал бөглөнө үү.")
+    .min(6, "Нууц үг хамгийн багадаа 6 тэмдэгт байх ёстой."),
+  rePassword: yup
+    .string()
+    .oneOf([yup.ref("password")], "Нууц үг хоорондоо таарахгүй байна")
+    .min(6, "Хамгийн багадаа 6 тэмдэгтээс тогтоно")
+    .required("Нууц үгийг заавал оруулна уу"),
 });
 
 const SignupPage = () => {
   const formik = useFormik({
-    onSubmit: ()=>{},
-    initialValues:{name:'', email: ''}
+    onSubmit: ({ email, password })=>{
+      console.log("EMAIL", email);
+      console.log("PASS", password);
+    },
+    initialValues: {
+      name: "",
+      email: "",
+      address: "",
+      password: "",
+      rePassword: "",
+      isOk: false,
+    },
+    validateOnChange: false,
+    validateOnBlur: false,
+    validationSchema,
   })
   return (
     <Box sx={{ maxWidth: "550px", mx: "auto", my: "110px"}}>
         <Stack sx={{background: "", p: "32px"}} spacing="16px">
           <Typography textAlign="center" sx={{fontSize: "30px", fontWeight: "bold"}}>Бүртгүүлэх</Typography>
-          <Input label="Нэр"></Input>
-          <Input label="И-мейл"></Input>
-          <Input label="Хаяг"></Input>
-          <Input label="Нууц үг" showPassword={true}></Input>
-          <Input label="Нууц үг давтах" showPassword={true}></Input>
+          <Input
+            name="name"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            errorText={formik.errors.name}
+            label="Нэр"
+          />
+          <Input
+            name="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            errorText={formik.errors.email}
+            label="И-Мэйл"
+          />
+          <Input
+            name="address"
+            value={formik.values.address}
+            onChange={formik.handleChange}
+            errorText={formik.errors.address}
+            label="Хаяг"
+          />
+          <Input
+            name="password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            errorText={formik.errors.password}
+            label="Нууц үг"
+            showPassword
+          />
+          <Input
+            name="rePassword"
+            value={formik.values.rePassword}
+            onChange={formik.handleChange}
+            errorText={formik.errors.rePassword}
+            label="Нууц үг давтах"
+            showPassword
+          />
           <Stack direction="row" spacing="20px" sx={{px: "10px", py: "20px"}}>
                 <CloudOutlinedIcon></CloudOutlinedIcon>
                 <Typography>Үйлчилгээний нөхцөл зөвшөөрөх</Typography>
           </Stack>
-          <Button label="Бүртгүүлэх" disabled={false} btnType="contained"></Button>
+          <Button label="Бүртгүүлэх" disabled={false} btnType="contained" onClick={formik.handleSubmit}></Button>
         </Stack>
     </Box>
   )

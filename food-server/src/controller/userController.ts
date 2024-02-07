@@ -7,7 +7,7 @@ export const getUsers = async (req: Request, res: Response) => {
         const users = await User.find();
         res.status(201).json({message: "Бүх хэрэглэгч олдлоо.", users});
     }   
-    catch(err){
-        res.status(400).json({ message: "Бүх хэрэглэгчийн мэдээллийг авах үед алдаа гарлаа.", err});
+    catch(error){
+        res.status(400).json({ message: "Бүх хэрэглэгчийн мэдээллийг авах үед алдаа гарлаа.", error});
     }
 };

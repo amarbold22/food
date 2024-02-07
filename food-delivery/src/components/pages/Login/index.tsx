@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useFormik } from "formik";
 import * as yup from "yup";
 // import { UserContext } from '@/context/UserProvider';
@@ -29,7 +29,6 @@ const LoginPage = () => {
     onSubmit: ({ email, password }) => {
       console.log("EMAIL", email);
       console.log("PASS", password);
-      
     },
     initialValues: {
       email: "",
@@ -62,11 +61,12 @@ const LoginPage = () => {
           />
           </Box>
           <Link href="/recovery/step1">
-            <Typography textAlign="end" color="gray" sx={{mb: "20px"}}>Нууц үг сэргээх</Typography>
+            {/* <Typography textAlign="end" color="gray" sx={{mb: "20px"}}>Нууц үг сэргээх</Typography> */}
+            <Button label="Нууц үг сэргээх" btnType="text" disabled={false} href="/recovery/step1"/>
           </Link>
           <Button label="Нэвтрэх" disabled={false} btnType="outlined" onClick={formik.handleSubmit}/>
           <Typography textAlign="center" sx={{my: "20px"}}>Эсвэл</Typography>
-          <Button label="Нэвтрэх" disabled={false} btnType="contained"></Button>
+          <Button label="Бүртгүүлэх" disabled={false} btnType="contained" href="/signup"></Button>
         </Stack>
     </Box>
   )

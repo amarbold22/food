@@ -1,23 +1,50 @@
-import Button from '@/components/CORE/Button';
-import { Input } from '@/components/CORE/Input';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
-import React from 'react';
+"use client";
 
-const PasswordRecoveryPage = () => {
+import { ChangeEvent, useState } from "react";
+
+import { Container } from "@mui/material";
+
+import StepOne from "./PasswordRecoveryPage1";
+import StepTwo from "./PasswordRecoveryPage2";
+import StepThree from "./PasswordRecoveryPage3";
+
+const MyStepper = () => {
+  const [activeStep, setActiveStep] = useState(3);
+
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+    otp: "",
+  });
+
+  const handleNext = async () => {
+    setActiveStep((prev) => prev + 1);
+  };
+
+  const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
   return (
-    <Box sx={{ maxWidth: "550px", mx: "auto", my: "110px"}}>
-        <Stack sx={{background: "", p: "32px"}}>
-          <Typography textAlign="center" sx={{fontSize: "30px", fontWeight: "bold"}}>Нууц үг сэргээх</Typography>
-          <Input label="И-мейл"></Input>
-          <Link>
-            <Button label="Нэвтрэх" disabled={false} btnType="contained"></Button>
-          </Link>
-        </Stack>
-    </Box>
-  )
+    <Container>
+      {activeStep === 1 && (
+        <StepOne
+          email={user.email}
+          handleNext={handleNext}
+          handleChangeInput={handleChangeInput}
+        />
+      )}
+      {activeStep === 2 && (
+        <StepTwo
+          email={user.email}
+          otp={user.otp}
+          handleNext={handleNext}
+          handleChangeInput={handleChangeInput}
+        />
+      )}
+      {activeStep === 3 && <StepThree email={user.email} />}
+    </Container>
+  );
 };
 
-export default PasswordRecoveryPage;
+export default MyStepper;

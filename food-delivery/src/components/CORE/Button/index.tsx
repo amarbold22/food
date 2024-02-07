@@ -9,12 +9,14 @@ interface IButtonProps {
     h?: number;
     btnType?: "contained" | "outlined" | "text";
     onClick?: () => void;
+    href?: string;
 }
 
-const Button = ({ label, disabled, btnType,h, onClick }: IButtonProps) => {
+const Button = ({ label, disabled, btnType, h, onClick, href }: IButtonProps) => {
   return (
     <Stack>
         <MuiButton
+        href={href}
         onClick={onClick}
         color="primary"
         variant={btnType}

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 // import { customAlphabet } from "nanoid";
@@ -67,7 +67,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
   }
 };
 
-export const verifyUser = async (req: Request, res: Response) => {
+export const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { token } = req.query;
 
@@ -81,15 +81,13 @@ export const verifyUser = async (req: Request, res: Response) => {
     if (!findUser) {
       res.status(500).send("Not verified");
     } else {
-      findUser.isVerified = true;
     }
-
+    findUser?.isVerified && true;
     await findUser?.save();
 
     res.status(200).send(`<h1 style="color: green">Valid Link </h1>`);
   } catch (error) {
-    console.log(error);
-    res.status(500).send({ message: "Server is internal error", error });
+    next(error);
   }
 };
 
