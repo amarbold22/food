@@ -5,11 +5,10 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CloudOutlinedIcon from '@mui/icons-material/CloudOutlined';
-import React from 'react';
+import React, { useContext } from 'react';
 import * as yup from 'yup'
 import { useFormik } from 'formik';
-
-
+import { UserContext } from '@/context/UserProvider';
 
 const validationSchema = yup.object({
   name: yup.string().required("Нэрийг заавал бөглөнө үү."),
@@ -19,7 +18,7 @@ const validationSchema = yup.object({
     .required("Имэйл хаягыг заавал бөглөнө үү.")
     .email("Хүчинтэй имэйл хаяг байх ёстой")
     .matches(
-      /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@gmail[A-Za-z0-9.-]+$/,
+      /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/,
       "Та зөвхөн gmail хаяг оруулна"
     ),
   address: yup.string().required("Хаягийг заавал бөглөнө үү."),
@@ -35,10 +34,12 @@ const validationSchema = yup.object({
 });
 
 const SignupPage = () => {
+  const { signup } = useContext(UserContext);
   const formik = useFormik({
-    onSubmit: ({ email, password })=>{
+    onSubmit: ({ email, password, address, name })=>{
       console.log("EMAIL", email);
       console.log("PASS", password);
+      signup(email, password, address, name);
     },
     initialValues: {
       name: "",

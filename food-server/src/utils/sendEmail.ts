@@ -27,7 +27,7 @@ const transport = nodemailer.createTransport({
 export const sendEmail = async ({email, otp, token} : IEmailProps) => {
     const htmlTemplate = otp 
       ? generateTemplate(otp as string)
-      : generateTemplate(token as string);
+      : generateLink(token as string);
     const info = await transport.sendMail({
         from: process.env.EMAIL_USER, // sender address
         to: email, // list of receivers

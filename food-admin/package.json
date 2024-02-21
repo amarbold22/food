@@ -1,0 +1,44 @@
+{
+  "name": "food-admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@faker-js/faker": "^8.4.0",
+    "@iconify/react": "^4.1.1",
+    "@mui/icons-material": "^5.15.7",
+    "@mui/lab": "^5.0.0-alpha.163",
+    "@mui/material": "^5.15.7",
+    "@mui/material-nextjs": "^5.15.7",
+    "apexcharts": "^3.45.2",
+    "axios": "^1.6.7",
+    "date-fns": "^3.3.1",
+    "history": "^5.3.0",
+    "lodash": "^4.17.21",
+    "next": "14.1.0",
+    "numeral": "^2.0.6",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-apexcharts": "^1.4.1",
+    "react-dom": "^18",
+    "react-helmet-async": "^2.0.4",
+    "react-hook-form": "^7.50.0",
+    "simplebar-react": "^3.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/numeral": "^2.0.5",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.0",
+    "typescript": "^5"
+  }
+}

@@ -8,6 +8,7 @@ import Link from '@mui/material/Link';
 import React, { useContext } from 'react';
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { UserContext, UserProvider } from '@/context/UserProvider';
 // import { UserContext } from '@/context/UserProvider';
 
 const validationSchema = yup.object({
@@ -15,7 +16,7 @@ const validationSchema = yup.object({
     .string()
     .max(100, "И-мейл хаяг 100 тэмдэгтээс хэтрэхгүй байна")
     .required("И-мейл хаягийг заавал бөглөнө үү")
-    .matches(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@gmail[A-Za-z0-9.-]+$/, "Та зөвхөн gmail оруулна"),
+    .matches(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/, "Та зөвхөн email оруулна"),
   password: yup
     .string()
     .required()
@@ -23,12 +24,13 @@ const validationSchema = yup.object({
 });
 
 const LoginPage = () => {
-  // const { login } = useContext(UserContext);
+  const { login } = useContext(UserContext);
 
   const formik = useFormik({
     onSubmit: ({ email, password }) => {
       console.log("EMAIL", email);
       console.log("PASS", password);
+      login(email, password);
     },
     initialValues: {
       email: "",

@@ -32,8 +32,7 @@ export const signup = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
-    console.log("LOGIN", email);
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email }).select("+password").lean();
 
     if (!user) {
       return res
@@ -54,7 +53,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       process.env.JWT_PRIVATE_KEY as string,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
-    res.status(201).json({ message: "Хэрэглэгч амжилттай нэвтэрлээ", token });
+    res.status(201).json({ message: "Хэрэглэгч амжилттай нэвтэрлээ", token, user });
   } catch (error) {
     next(error);
   }
