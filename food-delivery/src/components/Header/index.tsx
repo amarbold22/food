@@ -1,4 +1,5 @@
-import React from 'react'
+"use client";
+import React, { useState } from 'react'
 import Stack from '@mui/material/Stack'
 import WhiteIcon from '../WhiteIcon';
 import Typography from '@mui/material/Typography';
@@ -9,10 +10,15 @@ import InputBase from '@mui/material/InputBase';
 import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlined';
 import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
 import BlackIcon from '../BlackIcon';
-import { Button as HeaderButton } from '@mui/material';
+import { DrawerCard } from '../DrawerCard';
+import MyDrawer from '../Drawer';
 import Link from '@mui/material/Link';
 
 const Header = () => {
+    const [drawer, setDrawer] = useState(false);
+    const handleOpenDrawer = () => setDrawer(true);
+    const handleCloseDrawer = () => setDrawer(false);
+
   return (
     <Stack direction="row" height={40} sx={{backgroundColor: "#FFFFFF"}} py={4} px={10} justifyContent="center" alignItems="center" spacing={25}>
         <Stack direction="row" spacing={6} color="black">
@@ -40,19 +46,20 @@ const Header = () => {
                     inputProps={{ 'aria-label': 'search google maps' }}
                 />
             </Box>
-            <Link href="sags" underline="none">
+            <button onClick={handleOpenDrawer}>
                 <Stack direction="row"  sx={{color: "black"}} spacing="10px" px={2}>
                     <ShoppingBasketOutlinedIcon/>
                     <Typography sx={{fontWeight: "bold"}}>Сагс</Typography>
                 </Stack>
-            </Link>
+            </button>
             <Link href="/login" underline="none">
                 <Stack direction="row" spacing="10px" px={2} sx={{color: "black"}}>
                     <Person2OutlinedIcon/>
                     <Typography sx={{fontWeight: "bold"}}>Нэвтрэх</Typography>
                 </Stack>
             </Link>
-        </Stack>
+            <MyDrawer open={drawer} handleClose={handleCloseDrawer} />
+            </Stack>
     </Stack>
   )
 }

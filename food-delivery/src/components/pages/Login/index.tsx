@@ -28,9 +28,8 @@ const LoginPage = () => {
 
   const formik = useFormik({
     onSubmit: ({ email, password }) => {
-      console.log("EMAIL", email);
-      console.log("PASS", password);
       login(email, password);
+      console.log("login worked");
     },
     initialValues: {
       email: "",

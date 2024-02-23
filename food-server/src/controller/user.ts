@@ -32,8 +32,8 @@ export const signup = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email }).select("+password").lean();
-
+    const user = await User.findOne({ email }).select("+password");
+    console.log(user);
     if (!user) {
       return res
         .status(400)

@@ -5,6 +5,8 @@ import { UserProvider } from '@/context/UserProvider'
 import Footer from '@/components/Footer'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { CategoryProvider } from '@/context/CategoryProvider'
+import { FoodProvider } from '@/context/FoodProvider'
 
 export default function RootLayout({
   children,
@@ -17,10 +19,14 @@ export default function RootLayout({
         
         <ThemeProvider>
           <UserProvider>
-            <ToastContainer/>
-            <Header/>
-              {children}
-            <Footer/>
+            <CategoryProvider>
+              <FoodProvider>
+                <ToastContainer/>
+                <Header/>
+                  {children}
+                <Footer/>
+              </FoodProvider>
+            </CategoryProvider>
           </UserProvider>
         </ThemeProvider> 
       </body>

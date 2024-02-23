@@ -17,6 +17,8 @@ interface IUserContext {
     login: (name: string, password: string) => void;
     signup: (email: string, password: string, address: string, name: string) => void;
     verify: () => void;
+    handleOpenDrawer: () => void;
+    handleCloseDrawer: () => void;
 }
 
 export const UserContext = createContext<IUserContext>({
@@ -33,10 +35,15 @@ export const UserContext = createContext<IUserContext>({
     },
     verify: () => {
 
-    }
+    },
+    handleOpenDrawer: () => {},
+    handleCloseDrawer: () => {}, 
 })
 
 export const UserProvider = ({ children }: PropsWithChildren) => {
+  const [drawer, setDrawer] = useState(false);
+    const handleOpenDrawer = () => setDrawer(true);
+    const handleCloseDrawer = () => setDrawer(false);
   const router = useRouter();
     const [user, setUser] = useState<IUser>({
         name: "Text User",
@@ -54,6 +61,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
       router.push("/");
       console.log(data);
       } catch (error) {
+        console.log(error);
         toast.error("Login хийх үед алдаа гарлаа"); 
       }
     }
@@ -83,7 +91,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     }
 
   return (
-    <UserContext.Provider value={{ user, login, signup, verify }}>
+    <UserContext.Provider value={{ user, login, signup, verify, handleOpenDrawer, handleCloseDrawer, drawer, setDrawer }}>
       {children}
     </UserContext.Provider>
   )

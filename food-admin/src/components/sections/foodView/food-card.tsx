@@ -70,10 +70,10 @@ export default function FoodCard({ food }: any) {
           textDecoration: "line-through",
         }}
       >
-        {food?.isSale && fCurrency(food?.isSale)}
+        {food?.isSale && fCurrency(food?.price)}
       </Typography>
       &nbsp;
-      {fCurrency(food?.isSale)}
+      {fCurrency(food?.price)}
     </Typography>
   );
 
@@ -125,7 +125,7 @@ export default function FoodCard({ food }: any) {
               Edit
             </MenuItem>
 
-            {/* <MenuItem
+            <MenuItem
               onClick={() => {
                 handleClose();
                 deleteFood(food._id);
@@ -134,7 +134,7 @@ export default function FoodCard({ food }: any) {
             >
               <DeleteForeverOutlinedIcon />
               Delete
-            </MenuItem> */}
+            </MenuItem>
           </Popover>
         </Stack>
       </Stack>
