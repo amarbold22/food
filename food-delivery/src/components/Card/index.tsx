@@ -1,23 +1,55 @@
 import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardActions from '@mui/material/CardActions';
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
+import { Modal, Grid, Stack, Box, Button, Typography, CardMedia, CardContent, Card, CardActions, CardActionArea} from '@mui/material';
 import { ReactNode } from 'react';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import MuiButton from '@/components/CORE/Button'
 
 interface ICardProps {
     food?: any;
 }
 
+const style = {
+  display: 'flex',
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 981,
+  height: 564,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  borderRadius: '10px',
+  p: 4,
+};
+
 const FoodCard = ({food} : ICardProps) => {
-  console.log(food);
+  const [ open, setOpen ] = React.useState(false);
+
+  const openModal = () => {
+      setOpen(true);
+  }
+  const closeModal = () => {
+    setOpen(false);
+    console.log(open);
+  }
+
+  const [ count, setCount ] = React.useState(1);
+
+  const addCount = () => {
+    setCount(count + 1);
+};
+
+const subCount = () => {
+  if(count === 0){
+    setCount(0);
+  }
+  else{
+    setCount(count - 1);
+  }
+}
+
   return (
-    <Card sx={{ maxWidth: 345, borderRadius: "20px", boxShadow: "none", position: "relative"}}>
+    <Card sx={{ maxWidth: 345, borderRadius: "20px", boxShadow: "none", position: "relative"}} onClick={openModal}>
       <CardActionArea sx={{width: "500px", height: "300px"}}>
         <CardMedia
           component="img"
@@ -26,18 +58,6 @@ const FoodCard = ({food} : ICardProps) => {
           alt="green iguana"
           sx={{borderRadius: "20px", width: "100%"}}
         />
-        {/* <Box
-          component="img"
-          alt={food?.name}
-          src={food?.image}
-          sx={{
-            top: 0,
-            width: 1,
-            height: 1,
-            objectFit: "cover",
-            position: "absolute",
-          }}
-        /> */}
         <CardContent>
           <Typography gutterBottom variant="h5" component="div" fontWeight="600">
              {food?.name}
@@ -55,6 +75,54 @@ const FoodCard = ({food} : ICardProps) => {
       width: "50px", height: "30px"}} textAlign="center">
         <Typography sx={{color: "white", fontWeight: "bold", px: "10px", pt: "3px"}}>{food?.sale}%</Typography>
       </Box>
+      <Modal
+        open={open}
+        onClose={closeModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        >
+            <Box sx={style}>
+                <Grid item xs={7} sx={{display: 'flex', justifyContent: "center", alignItems: "center", overflow: "hidden"}}>
+                <Box
+                    component="img"
+                    sx={{
+                      width: "450px",
+                      height: "600px"
+                    }}
+                    alt="Pizza"
+                    src={food?.image}
+                />
+                </Grid>
+                <Grid item xs={5}>
+                  <Stack>
+                      <Box textAlign="end">
+                        <Button onClick={closeModal}>
+                          <CloseOutlinedIcon/>
+                        </Button>
+                      </Box>
+                      <Grid display="flex" flexDirection="column" gap="32px">
+                        <Box>
+                          <Typography sx={{fontSize: "28px", fontWeight: 600}}>{food?.name}</Typography>
+                          <Typography sx={{fontSize: "18px" ,color: "#18ba51"}}>{food?.price}₮</Typography>
+                        </Box>
+                        <Box sx={{display: "flex",flexDirection: "column", gap: "12px"}}>
+                          <Typography>Тайлбар</Typography>
+                          <Box sx={{ borderRadius: "10px", background: "#F6F6F6", height: "60px", padding: "10px"}}>
+                              <Typography color="#767676">{food?.description}</Typography>
+                          </Box>
+                        </Box>
+                        <Typography>Тоо</Typography>
+                        <Box sx={{display: "flex", gap: "20px", justifyContent: "space-between", alignItems: "center"}}>
+                            <Button sx={{background: "#18BA51", color: "white"}} onClick={subCount}>-</Button>
+                            <Typography sx={{background: "#F6F6F6", height: "30px", maxWidth: "200px"}}>{count}</Typography>
+                            <Button sx={{background: "#18BA51", color: "white"}} onClick={addCount}>+</Button>
+                        </Box>
+                        <MuiButton label="Сагслах" disabled={false} btnType="contained" h={50}></MuiButton>
+                      </Grid>
+                  </Stack>
+                </Grid>
+            </Box>
+        </Modal>
     </Card>
   );
 }

@@ -24,7 +24,6 @@ export const CategoryProvider = ({ children }: PropsWithChildren) => {
     const getCategories = async () => {
         try {
             const { data } = await axios.get("http://localhost:8080/categories");
-            console.log(data);
             setCategories(data.categories);
         } catch (error) {
             console.log("Error in getCategory FUNC");

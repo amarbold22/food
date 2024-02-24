@@ -20,7 +20,7 @@ export const signup = async (req: Request, res: Response) => {
     sendEmail({ email: user.email, token: verifyToken });
     res.status(201).json({
       message:
-        "Шинэ хэрэглэгч амжилттай бүртгэгдлээ таны бүртгэлтэй имэйл хаяг руу баталгаажуулах email илгээсэн.",
+        "Шинэ хэрэглэгч амжилттай бүртгэгдлээ.", userInfo: user
     });
   } catch (error) {
     res
@@ -31,7 +31,7 @@ export const signup = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, password } = req.body;
+    const { email, pass } = req.body;
     const user = await User.findOne({ email }).select("+password");
     console.log(user);
     if (!user) {
@@ -40,7 +40,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         .json({ message: `${email}-тэй хэрэглэгч бүртгэлгүй байна.` });
     }
 
-    const isValid = await bcrypt.compare(password, user.password);
+    const isValid = await bcrypt.compare(pass, user.password);
 
     if (!isValid) {
       throw new MyError(`И-мейл эсвэл нууц үг буруу байна`, 400);

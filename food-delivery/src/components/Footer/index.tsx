@@ -24,7 +24,7 @@ const Footer = () => {
                     </Stack>
                     <Stack direction="row" spacing={12}>
                         {footerArr.map((el) => (
-                            <Typography sx={{color: "white", textDecoration: "underline", fontWeight: "bold"}}>{el}</Typography>
+                            <Typography key={el} sx={{color: "white", textDecoration: "underline", fontWeight: "bold"}}>{el}</Typography>
                         ))}
                     </Stack>
                     <Stack divider={<Divider orientation="horizontal" color="white"/>} spacing={7} sx={{width: "full"}}>

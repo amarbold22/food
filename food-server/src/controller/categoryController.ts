@@ -41,12 +41,10 @@ export const getAllCategory = async (
   next: NextFunction
 ) => {
   try {
-    const { categoryId } = req.params;
     const categories = await Category.find();
-
     res
       .status(200)
-      .json({ message: `${categoryId}-found all  categories `, categories });
+      .json({ message: `Found all categories `, categories });
   } catch (error) {
     next(error);
   }

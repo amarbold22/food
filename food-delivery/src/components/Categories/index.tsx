@@ -24,7 +24,6 @@ const CategoryTag = ({ name, foods, getFoods, id }: CategoryProps) => {
         <Stack direction="row" display="flex" justifyContent="space-between" alignItems="center">
             <Stack direction="row" display="flex" alignItems="center">
                 <AutoAwesomeIcon sx={{color: "#18b15a"}}/>
-                {/* {} */}
                  <Typography fontSize="24px" fontWeight="bold">{name}</Typography>
             </Stack>
             <Stack direction="row">
@@ -34,7 +33,7 @@ const CategoryTag = ({ name, foods, getFoods, id }: CategoryProps) => {
         </Stack>
         <Stack direction="row" spacing={10} my={5}>
             {foods?.filter((food: any) => food.category._id == id)?.map((food: any) => (
-                <Box key={food.category._id}>
+                <Box key={food._id}>
                     <FoodCard food={food}/>
                 </Box>
             ))}

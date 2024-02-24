@@ -1,6 +1,6 @@
 "use client"
 
-import React, { PropsWithChildren, useState,createContext } from 'react'
+import React, { PropsWithChildren, useState,createContext, useEffect } from 'react'
 import { useRouter } from "next/navigation"
 import axios from "axios"
 import { toast } from 'react-toastify'
@@ -12,22 +12,46 @@ interface IUser{
     password?: string
 }
 
+interface ISignUpUserInfo{
+    name: string;
+    email: string;
+    password: string;
+    address: {
+      duureg: string;
+      horoo: string;
+    };
+}
+
 interface IUserContext {
-    user: IUser;
+    user: any;
+    userInfo: IUser;
+    signUpInfo: ISignUpUserInfo;
     login: (name: string, password: string) => void;
     signup: (email: string, password: string, address: string, name: string) => void;
+    logout: () => void;
     verify: () => void;
-    handleOpenDrawer: () => void;
-    handleCloseDrawer: () => void;
 }
 
 export const UserContext = createContext<IUserContext>({
-    user: {
+    user: {},
+    userInfo: {
         name: "",
         email: "",
         address: ""
     },
+    signUpInfo: {
+      name: "",
+      email: "",
+      password: "",
+      address: {
+        duureg: "",
+        horoo: "",
+      }
+    },
     login: () => {
+
+    },
+    logout: () => {
 
     },
     signup: () => {
@@ -35,51 +59,79 @@ export const UserContext = createContext<IUserContext>({
     },
     verify: () => {
 
-    },
-    handleOpenDrawer: () => {},
-    handleCloseDrawer: () => {}, 
+    }
 })
 
 export const UserProvider = ({ children }: PropsWithChildren) => {
-  const [drawer, setDrawer] = useState(false);
-    const handleOpenDrawer = () => setDrawer(true);
-    const handleCloseDrawer = () => setDrawer(false);
+  const [user, setUser] = useState("");
+  const [token, setToken] = useState("");
   const router = useRouter();
-    const [user, setUser] = useState<IUser>({
-        name: "Text User",
+    const [userInfo, setUserInfo] = useState<IUser>({
+        name: "",
         email: "",
         address: "",
         password: ""
     });
+    const [signUpInfo, setSignupInfo] = useState({
+      name: "",
+      email: "",
+      password: "",
+      address: {
+        duureg: "",
+        horoo: "",
+      },
+    });
 
     const login = async (email: string, password: string) => {
       try {
-        const { data } = await axios.post("http://localhost:8080/auth/login", {
+        const { data: {
+          token, user
+        } } = await axios.post("http://localhost:8080/auth/login", {
         email: email,
-        password: password
+        pass: password
       });
-      router.push("/");
-      console.log(data);
+      localStorage.setItem("token", JSON.stringify(token));
+      localStorage.setItem("user", JSON.stringify(user));
+
+      console.log("Nevterlee", user, token);
+      router.replace("/");
       } catch (error) {
         console.log(error);
         toast.error("Login хийх үед алдаа гарлаа"); 
       }
     }
+    const checkToken = () => {
+      if(localStorage.getItem("token")){
+        setUser(JSON.parse(localStorage.getItem("user")!));
+        setToken(localStorage.getItem("token")!);
+      }
+    }
+    useEffect(() => {
+      checkToken();
+    }, []);
 
-    const signup = async (email: string, password: string, address: string, name: string) => {
+    const signup = async (email: string, password: string, name: string) => {
       try {
         const data = await axios.post("http://localhost:8080/auth/signup", {
           email: email,
           password: password,
-          address: address,
-          name: name
+          name: name,
+          address: signUpInfo.address
         });
-        router.push("/verify");
+        
+        router.push("/");
         console.log(data);
       } catch (error) {
         console.log(error);
         toast.error("Signup хийх үед алдаа гарлаа");
       }
+    }
+
+    const logout = () => {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      setUser("");
+      setToken("");
     }
 
     const verify = () => {
@@ -91,7 +143,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     }
 
   return (
-    <UserContext.Provider value={{ user, login, signup, verify, handleOpenDrawer, handleCloseDrawer, drawer, setDrawer }}>
+    <UserContext.Provider value={{ user, userInfo, signUpInfo, login, signup, logout, verify }}>
       {children}
     </UserContext.Provider>
   )

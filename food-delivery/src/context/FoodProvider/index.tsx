@@ -25,7 +25,6 @@ export const FoodProvider = ({ children }: PropsWithChildren) => {
     const getFoods = async () => {
         try {
             const { data } = await axios.get("http://localhost:8080/foods");
-            console.log(data);
             setFoods(data.foods);
         } catch (error) {
             console.log("Error in getFoods FUNC");

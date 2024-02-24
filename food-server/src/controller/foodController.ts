@@ -46,11 +46,7 @@ export const getAllFoods = async (
 ) => {
   try {
     const foods = await Food.find().populate("category", "_id name");
-
-    res.status(200).json({
-      message: `Бүх хоол`,
-      foods,
-    });
+    res.status(200).json({ message: `Бүх хоол`, foods});
   } catch (error) {
     next(error);
   }

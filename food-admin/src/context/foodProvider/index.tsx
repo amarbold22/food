@@ -84,12 +84,13 @@ const FoodProvider = ({ children }: PropsWithChildren) => {
 
   const createFood = async () => {
     try {
-      console.log("FOOD FORM", foodForm);
       const { data } = await axios
         .post("http://localhost:8080/foods", foodForm)
       setLoading(false);
       setFoods([...foods, data.food]);
-    } catch (error) {}
+    } catch (error) {
+      console.log("error in create food function", error);
+    }
   };
 
   const uploadFoodImage = async () => {
@@ -98,10 +99,12 @@ const FoodProvider = ({ children }: PropsWithChildren) => {
       formData.set("image", file!);
       const { data } = await axios.post("http://localhost:8080/upload", formData);
       foodForm.image = data.image_url;
-      
       createFood();
-    } catch (error) {}
+    } catch (error) {
+      console.log("error in uploadFoodImage function", error);
+    }
   };
+
   const deleteFoodFromArray = (id: string) => {
     setFoods((oldFoods: any) => {
       return oldFoods.filter((obj: any) => obj._id !== id);
@@ -116,7 +119,9 @@ const FoodProvider = ({ children }: PropsWithChildren) => {
         },
       });
       deleteFoodFromArray(foodId);
-    } catch (error) {}
+    } catch (error) {
+      console.log("Error in deleteFood function", error);
+    }
   };
   return (
     <foodContext.Provider
