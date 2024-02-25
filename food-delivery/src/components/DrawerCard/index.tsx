@@ -6,6 +6,7 @@ import {
   Modal,
   Grid,
   Divider,
+  CardMedia,
 } from "@mui/material";
 import Image from "next/image";
 import { Remove, Add, Close } from "@mui/icons-material";
@@ -25,24 +26,24 @@ const backgroundImageStyle = {
 
 export const DrawerCard = () => {
   const [count, setCount] = React.useState(1);
-
-  const handleCount = (operation: string) => {
-    if (operation === "sub") {
-      if(count === 0){
-        setCount(0);
-      }else{
-        setCount(count - 1);
-      }
-    } else if (operation === "add") {
-      setCount(count + 1);
-    }
-  };
+  const handleAdd = () => setCount(count + 1);
+  const handleSub = () => {
+    if(count === 1) setCount(1)
+    else setCount(count - 1)
+  }
 
   return (
     <>
       <Box sx={style} m={5}>
         <Grid container display={"flex"} flexDirection={"row"} gap={10}>
-          <Grid item xs={5} style={backgroundImageStyle}></Grid>
+          <Grid item xs={5}>
+            <Box sx={{background: "red", borderRadius: "10px", width: "250px", height: "150px", overflow: "hidden"}}>
+                <CardMedia component="img"
+                        sx={{ height: 150, width: 280 }}
+                        image="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vZHxlbnwwfHwwfHx8MA%3D%3D"
+                        alt="img"/>
+            </Box>
+          </Grid>
           <Grid
             item
             xs={5}
@@ -58,7 +59,7 @@ export const DrawerCard = () => {
             <Grid display={"flex"} flexDirection={"column"}>
               <Typography fontWeight={600}>Bowl</Typography>
               <Typography sx={{ color: "#18BA51" }} fontWeight={600}>
-                18,800
+                {count * 18800}₮
               </Typography>
 
               <Typography color={"gray"}>
@@ -66,7 +67,7 @@ export const DrawerCard = () => {
               </Typography>
 
               <div>
-                <MuiButton onClick={() => handleCount("sub")}>
+                <MuiButton onClick={handleSub}>
                   <Remove
                     sx={{
                       bgcolor: "#18BA51",
@@ -90,7 +91,7 @@ export const DrawerCard = () => {
                     fontSize: 16,
                   }}
                 />
-                <MuiButton onClick={() => handleCount("add")}>
+                <MuiButton onClick={handleAdd}>
                   <Add
                     sx={{
                       bgcolor: "#18BA51",

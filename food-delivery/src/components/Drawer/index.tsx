@@ -1,8 +1,10 @@
-import { Box, Button, Divider, Drawer, Typography } from "@mui/material";
+import { Box, Button as MuiButton, Divider, Drawer, Typography, Grid } from "@mui/material";
 import { FaChevronLeft } from "react-icons/fa";
+import Button from "../CORE/Button";
 
-import React from "react";
+import React, { useContext } from "react";
 import { DrawerCard } from "../DrawerCard";
+import { basketContext } from "@/context/BasketProvider";
 
 interface IDrawerProps {
   open: boolean;
@@ -10,6 +12,7 @@ interface IDrawerProps {
 }
 
 const MyDrawer = ({ handleClose, open }: IDrawerProps) => {
+  const { basketFoods } = useContext(basketContext);
   return (
     <>
       <React.Fragment>
@@ -26,7 +29,25 @@ const MyDrawer = ({ handleClose, open }: IDrawerProps) => {
               <Typography></Typography>
             </Box>
             <Divider />
-            <DrawerCard />
+            {/* {
+              basketFoods?.map((food: any) => {
+                <DrawerCard/>
+              })
+            } */}
+            <DrawerCard/>
+            <DrawerCard/>
+            <Divider />
+            <Grid sx={{display:"flex",
+              alignItems:"center",
+              justifyContent:"space-between", px: "20px", pt: "20px" }} >
+                <Grid>
+                    <Typography>Нийт төлөх дүн</Typography>
+                    <Typography sx={{fontWeight: "bold"}}>35000₮</Typography>
+                </Grid>
+                <Grid>
+                  <Button label="Захиалах" disabled={false} btnType="contained"></Button>
+                </Grid>
+            </Grid>
           </Box>
         </Drawer>
       </React.Fragment>

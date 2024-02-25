@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useState } from 'react'
 import WhiteIcon from '../WhiteIcon';
-import { Button, IconButton, InputBase, Box, Typography, Stack } from '@mui/material';
+import { Button, IconButton, InputBase, Box, Typography, Stack, Badge } from '@mui/material';
 import SearchIcon from '../SearchIcon';
 import { ShoppingBasketOutlined, Person2Outlined } from '@mui/icons-material';
 // import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlined';
@@ -11,8 +11,10 @@ import MyDrawer from '../Drawer';
 import Link from '@mui/material/Link';
 import { useRouter } from 'next/navigation';
 import { UserContext } from '@/context/UserProvider';
+import { basketContext } from '@/context/BasketProvider';
 
 const Header = () => {
+    const { foodCount } = useContext(basketContext);
     const { user } = useContext(UserContext);
     console.log(user);
     const router = useRouter();
@@ -50,12 +52,14 @@ const Header = () => {
                     inputProps={{ 'aria-label': 'search google maps' }}
                 />
             </Box>
-            <button onClick={handleOpenDrawer}>
+            <Button onClick={handleOpenDrawer}>
                 <Stack direction="row"  sx={{color: "black"}} spacing="10px" px={2}>
-                    <ShoppingBasketOutlined/>
+                    <Badge badgeContent={foodCount} color="primary">
+                        <ShoppingBasketOutlined/>
+                    </Badge>
                     <Typography sx={{fontWeight: "bold"}}>Сагс</Typography>
                 </Stack>
-            </button>
+            </Button>
             {
                 user ? (
                     <Button onClick={goToProfile}>

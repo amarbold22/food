@@ -30,6 +30,7 @@ interface IUserContext {
     signup: (email: string, password: string, address: string, name: string) => void;
     logout: () => void;
     verify: () => void;
+    token: any;
 }
 
 export const UserContext = createContext<IUserContext>({
@@ -59,12 +60,14 @@ export const UserContext = createContext<IUserContext>({
     },
     verify: () => {
 
-    }
+    },
+    token: ""
 })
 
 export const UserProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState("");
   const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
     const [userInfo, setUserInfo] = useState<IUser>({
         name: "",
@@ -84,6 +87,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
 
     const login = async (email: string, password: string) => {
       try {
+        setLoading(true);
         const { data: {
           token, user
         } } = await axios.post("http://localhost:8080/auth/login", {
@@ -99,12 +103,16 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
         console.log(error);
         toast.error("Login хийх үед алдаа гарлаа"); 
       }
+      finally {
+        setLoading(false);
+      }
     }
     const checkToken = () => {
       if(localStorage.getItem("token")){
         setUser(JSON.parse(localStorage.getItem("user")!));
         setToken(localStorage.getItem("token")!);
       }
+      console.log("checkToken worked");
     }
     useEffect(() => {
       checkToken();
@@ -143,7 +151,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     }
 
   return (
-    <UserContext.Provider value={{ user, userInfo, signUpInfo, login, signup, logout, verify }}>
+    <UserContext.Provider value={{ user, userInfo, signUpInfo, login, signup, logout, verify, token }}>
       {children}
     </UserContext.Provider>
   )

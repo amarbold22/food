@@ -9,9 +9,8 @@ export const createBasket = async ( req: Request, res: Response, next: NextFunct
             user: userId,
             foods: []
         };
-        
         const data = await Basket.create(basket);
-        res.status(200).json({ message: "Basket is created"});
+        res.status(200).json({ message: `Basket is created for ${userId}`});
     } catch (error: any) {
         next(error);
     }
@@ -20,6 +19,7 @@ export const createBasket = async ( req: Request, res: Response, next: NextFunct
 export const addFoodToBasket = async ( req: Request, res: Response, next: NextFunction) => {
     try {
         const { userId, foodId, count } = req.body;
+        console.log(userId, foodId, count);
         const userBasket = await Basket.findOne({ user: userId});
         userBasket?.foods.push({ foods: foodId, count: count });
         await userBasket?.save();

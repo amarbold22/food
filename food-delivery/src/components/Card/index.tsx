@@ -3,6 +3,8 @@ import { Modal, Grid, Stack, Box, Button, Typography, CardMedia, CardContent, Ca
 import { ReactNode } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import MuiButton from '@/components/CORE/Button'
+import { UserContext } from '@/context/UserProvider';
+import { basketContext } from '@/context/BasketProvider';
 
 interface ICardProps {
     food?: any;
@@ -23,40 +25,34 @@ const style = {
 };
 
 const FoodCard = ({food} : ICardProps) => {
-  const [ open, setOpen ] = React.useState(false);
-
-  const openModal = () => {
-      setOpen(true);
-  }
-  const closeModal = () => {
-    setOpen(false);
-    console.log(open);
-  }
+  const { addBasketItem } = React.useContext(basketContext);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const [ count, setCount ] = React.useState(1);
+  const addCount = () => setCount(count + 1);;
 
-  const addCount = () => {
-    setCount(count + 1);
-};
-
-const subCount = () => {
-  if(count === 0){
-    setCount(0);
+  const subCount = () => {
+    if(count === 1) setCount(1);
+    else setCount(count - 1);
   }
-  else{
-    setCount(count - 1);
+  const handleAddBasket = () => {
+    console.log("handleAddBasket");
+    addBasketItem(food, count);
+    console.log(food, count);
+    handleClose();
   }
-}
 
   return (
-    <Card sx={{ maxWidth: 345, borderRadius: "20px", boxShadow: "none", position: "relative"}} onClick={openModal}>
-      <CardActionArea sx={{width: "500px", height: "300px"}}>
+    <Card sx={{ maxWidth: 345, borderRadius: "20px", boxShadow: "none", position: "relative"}} onClick={handleOpen}>
+      <CardActionArea sx={{width: "300px", height: "300px"}}>
         <CardMedia
           component="img"
           height="200px"
           image={food.image}
           alt="green iguana"
-          sx={{borderRadius: "20px", width: "100%"}}
+          sx={{borderRadius: "20px", width: "300px"}}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div" fontWeight="600">
@@ -77,17 +73,17 @@ const subCount = () => {
       </Box>
       <Modal
         open={open}
-        onClose={closeModal}
+        onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
                 <Grid item xs={7} sx={{display: 'flex', justifyContent: "center", alignItems: "center", overflow: "hidden"}}>
-                <Box
+                <CardMedia
                     component="img"
                     sx={{
                       width: "450px",
-                      height: "600px"
+                      height: "450px"
                     }}
                     alt="Pizza"
                     src={food?.image}
@@ -96,7 +92,7 @@ const subCount = () => {
                 <Grid item xs={5}>
                   <Stack>
                       <Box textAlign="end">
-                        <Button onClick={closeModal}>
+                        <Button>
                           <CloseOutlinedIcon/>
                         </Button>
                       </Box>
@@ -117,7 +113,7 @@ const subCount = () => {
                             <Typography sx={{background: "#F6F6F6", height: "30px", maxWidth: "200px"}}>{count}</Typography>
                             <Button sx={{background: "#18BA51", color: "white"}} onClick={addCount}>+</Button>
                         </Box>
-                        <MuiButton label="Сагслах" disabled={false} btnType="contained" h={50}></MuiButton>
+                        <MuiButton label="Сагслах" disabled={false} btnType="contained" h={50} onClick={handleAddBasket}></MuiButton>
                       </Grid>
                   </Stack>
                 </Grid>
