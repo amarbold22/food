@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authenticate } from "../middleware/auth";
 import {
   addFoodToBasket,
   createBasket,
@@ -9,8 +10,9 @@ import {
 const router = Router();
 router
   .route("/")
+  .get(authenticate, getBasketFoods)
   .post(createBasket)
   .put(addFoodToBasket)
-  .delete(deleteFoodFromBasket);
-router.route("/:userId").get(getBasketFoods);
+router.route("/:foodId")
+  .delete(authenticate, deleteFoodFromBasket);
 export default router;

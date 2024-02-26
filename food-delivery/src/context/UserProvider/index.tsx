@@ -33,40 +33,11 @@ interface IUserContext {
     token: any;
 }
 
-export const UserContext = createContext<IUserContext>({
-    user: {},
-    userInfo: {
-        name: "",
-        email: "",
-        address: ""
-    },
-    signUpInfo: {
-      name: "",
-      email: "",
-      password: "",
-      address: {
-        duureg: "",
-        horoo: "",
-      }
-    },
-    login: () => {
-
-    },
-    logout: () => {
-
-    },
-    signup: () => {
-
-    },
-    verify: () => {
-
-    },
-    token: ""
-})
+export const UserContext = createContext<IUserContext>({} as IUserContext)
 
 export const UserProvider = ({ children }: PropsWithChildren) => {
-  const [user, setUser] = useState("");
-  const [token, setToken] = useState("");
+  const [user, setUser] = useState<object | null>(null);
+  const [token, setToken] = useState<object | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
     const [userInfo, setUserInfo] = useState<IUser>({
@@ -110,7 +81,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     const checkToken = () => {
       if(localStorage.getItem("token")){
         setUser(JSON.parse(localStorage.getItem("user")!));
-        setToken(localStorage.getItem("token")!);
+        setToken(JSON.parse(localStorage.getItem("token")!));
       }
       console.log("checkToken worked");
     }
@@ -138,8 +109,8 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     const logout = () => {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
-      setUser("");
-      setToken("");
+      setUser(null);
+      setToken(null);
     }
 
     const verify = () => {

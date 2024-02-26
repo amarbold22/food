@@ -12,9 +12,10 @@ const basketSchema = new Schema({
         type: Schema.ObjectId,
         ref: "Food",
       },
-      count: Number,
+      count:{type: Number, default:1},
     },
   ],
+  totalPrice: Number
 });
 
 const Basket = model("Basket", basketSchema);

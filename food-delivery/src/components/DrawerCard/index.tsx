@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { Remove, Add, Close } from "@mui/icons-material";
+import { basketContext } from "@/context/BasketProvider";
 
 const style = {
   width: 538,
@@ -24,14 +25,18 @@ const backgroundImageStyle = {
   height: "150px",
 };
 
-export const DrawerCard = () => {
-  const [count, setCount] = React.useState(1);
+export const DrawerCard = ({food} : any) => {
+  const {deleteBasketItem} = React.useContext(basketContext);
+  const [count, setCount] = React.useState(food?.count);
   const handleAdd = () => setCount(count + 1);
   const handleSub = () => {
     if(count === 1) setCount(1)
     else setCount(count - 1)
   }
 
+  const handleDelete =(value: string)=>{
+    deleteBasketItem(value)
+  }
   return (
     <>
       <Box sx={style} m={5}>
@@ -40,7 +45,7 @@ export const DrawerCard = () => {
             <Box sx={{background: "red", borderRadius: "10px", width: "250px", height: "150px", overflow: "hidden"}}>
                 <CardMedia component="img"
                         sx={{ height: 150, width: 280 }}
-                        image="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vZHxlbnwwfHwwfHx8MA%3D%3D"
+                        image={food?.food?.image}
                         alt="img"/>
             </Box>
           </Grid>
@@ -53,17 +58,19 @@ export const DrawerCard = () => {
           >
             <Grid item xs={1} position={"relative"}>
               <MuiButton sx={{ ml: 50, position: "absolute" }}>
-                <Close />
+                <Close onClick={() => {
+                  handleDelete(food?.food?._id);
+                }}/>
               </MuiButton>
             </Grid>
             <Grid display={"flex"} flexDirection={"column"}>
-              <Typography fontWeight={600}>Bowl</Typography>
+              <Typography fontWeight={600}>{food?.food?.name}</Typography>
               <Typography sx={{ color: "#18BA51" }} fontWeight={600}>
-                {count * 18800}₮
+                {count * food?.food?.price}₮
               </Typography>
 
               <Typography color={"gray"}>
-                Өндөг, шош, улаан лооль, өргөст хэмт, байцаа, салмон.
+                {food?.food?.description}
               </Typography>
 
               <div>

@@ -2,7 +2,7 @@ import { Box, Button as MuiButton, Divider, Drawer, Typography, Grid } from "@mu
 import { FaChevronLeft } from "react-icons/fa";
 import Button from "../CORE/Button";
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { DrawerCard } from "../DrawerCard";
 import { basketContext } from "@/context/BasketProvider";
 
@@ -13,6 +13,8 @@ interface IDrawerProps {
 
 const MyDrawer = ({ handleClose, open }: IDrawerProps) => {
   const { basketFoods } = useContext(basketContext);
+
+  console.log("basketFoooooooooods", basketFoods);
   return (
     <>
       <React.Fragment>
@@ -29,20 +31,26 @@ const MyDrawer = ({ handleClose, open }: IDrawerProps) => {
               <Typography></Typography>
             </Box>
             <Divider />
-            {/* {
+            {
               basketFoods?.map((food: any) => {
-                <DrawerCard/>
+                return <DrawerCard food={food}/>
               })
-            } */}
-            <DrawerCard/>
-            <DrawerCard/>
+            }
             <Divider />
             <Grid sx={{display:"flex",
               alignItems:"center",
               justifyContent:"space-between", px: "20px", pt: "20px" }} >
                 <Grid>
                     <Typography>Нийт төлөх дүн</Typography>
-                    <Typography sx={{fontWeight: "bold"}}>35000₮</Typography>
+                    <Typography sx={{fontWeight: "bold"}}>{
+                      basketFoods?.map((food: any) => {
+                          return food?.count * food?.food?.price;
+                      })
+                      .filter((el: any) => (typeof el === "number"))
+                      ?.reduce((prev: any, next: any) => {
+                          return prev + next;
+                      }, 0)
+                    }₮</Typography>
                 </Grid>
                 <Grid>
                   <Button label="Захиалах" disabled={false} btnType="contained"></Button>
