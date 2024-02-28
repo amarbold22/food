@@ -24,11 +24,6 @@ const userSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  address: {
-    khoroo: { type: String },
-    duureg: { type: String },
-    buildingNo: { type: Number },
-  },
   role: {
     type: String,
     enum: ["Admin", "User", "Moderator"],
@@ -38,10 +33,36 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
-  createdAt: {
-    type: Date,
-    default: new Date(),
-  },
+  phone: String,
+  orders: [{
+    orderNo: String,
+    payment: {
+      amount: Number,
+      status: {
+        type: String,
+        enum: ['Paid', 'Not Paid'],
+        default: 'Not Paid'
+      },
+      paymentDate: Date,
+      createdAt: Date,
+    },
+    address: {
+      khoroo: { type: String },
+      duureg: { type: String },
+      buildingNo: { type: Number },
+      additionalInfo: String
+    },
+    delivery: {
+      status: {
+        type: String,
+        enum: ['Pending', 'Progressing', 'Delivered'],
+        default: 'Pending'
+      },
+      deliveredAt: Date
+    }
+  }]
+}, {
+  timestamps: true
 });
 
 userSchema.pre("save", async function async() {

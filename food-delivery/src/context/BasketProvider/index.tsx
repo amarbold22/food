@@ -7,7 +7,8 @@ import { array } from 'yup';
 
 interface IBasketContext {
     getUserBasketFoods: () => Promise<void>;
-    addBasketItem: (foodId: string, count: number) => Promise<void>;
+    addBasketItem: (food: {}) => Promise<void>;
+    updateFoodBasket: (food: {}) => Promise<void>;
     deleteBasketItem: (value: string) => Promise<void>;
     basketFoods: any;
     loading: boolean;
@@ -22,41 +23,47 @@ export const BasketProvider = ({ children }: PropsWithChildren) => {
     const [foodCount, setFoodCount] = useState(0);
     const { token } = useContext(UserContext);
     const [refresh, setRefresh] = useState(false);
-    const [basketFoods, setBasketFoods] = useState([]);
+    const [basketFoods, setBasketFoods] = useState<{} | null>(null);;
     const [loading, setLoading] = useState(false);
     const { user } = useContext(UserContext);
+
   const getUserBasketFoods = async () => {
     try {
-        if(user){
-            const data = await axios.get(`http://localhost:8080/basket`, {
+            const { data } = await axios.get(`http://localhost:8080/basket`, {
               headers: {
                 Authorization: `Bearer ${token}`
               }
             }).then((res) => res.data);
-            console.log(data.basket.foods);
+            console.log("DAATAA", data);
             setFoodCount(data.basket.foods.length);
-            setBasketFoods(data.basket.foods);
-            console.log("basketfoods aaaaa", basketFoods);
-        }
+            setBasketFoods({...data?.basket});
+            console.log("basketfoods =====>", basketFoods);
     } catch (error) {
         console.log("Error in getUserBasketFoods func", error);
     }
   }
 
-  const addBasketItem = async (food: any, count: number) => {
+  const addBasketItem = async (food: any) => {
     try {
       setLoading(true);
-        if(user){
-          const data = await axios.put(`http://localhost:8080/basket`, {
-            userId: user._id,
-            foodId: food._id,
-            count: count,
-          })
-          setLoading(false);
-          setRefresh(!refresh);
-        }
+      const { data } = await axios.post(`http://localhost:8080/basket`, food, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+      })
+      setBasketFoods({...data.basket});
+      setLoading(false);
+      setRefresh(!refresh);
     } catch (error) {
         console.log("Error in addBasketfunc", error);
+    }
+  }
+  const updateFoodBasket = async (food: any) => {
+    try {
+      const { data } = await axios.put(`http://localhost:8080/basket`, food);
+      setBasketFoods({...data.basket});
+    } catch (error) {
+      console.log("updateFoodBasket func error", error);
     }
   }
 
@@ -66,7 +73,7 @@ export const BasketProvider = ({ children }: PropsWithChildren) => {
         if(user){
           const data = await axios.delete(`http://localhost:8080/basket/` + value, {
             headers:{Authorization:`Bearer ${token}`}
-          } );
+          });
         }
         setLoading(false);
         setRefresh(!refresh)
@@ -76,10 +83,10 @@ export const BasketProvider = ({ children }: PropsWithChildren) => {
   }
   useEffect(() => {
     getUserBasketFoods();
-  }, [token, user, refresh]);
+  }, []);
 
   return (
-    <basketContext.Provider value={{ foodCount, loading, getUserBasketFoods, basketFoods, addBasketItem, deleteBasketItem }}>
+    <basketContext.Provider value={{ foodCount, loading, getUserBasketFoods, updateFoodBasket, basketFoods, addBasketItem, deleteBasketItem }}>
       {children}
     </basketContext.Provider>
   )

@@ -8,6 +8,7 @@ import categoryRoute from "./routes/categoryRoute";
 import uploadRoute from "./routes/uploadRoute";
 import foodRoute from "./routes/foodRoute";
 import basketRoute from "./routes/basketRoute";
+import orderRoute from "./routes/orderRoute"
 import dotenv from "dotenv";
 import cors from "cors";
 
@@ -30,5 +31,6 @@ app.use("/verify", verifyRoute);
 app.use("/categories", categoryRoute);
 app.use("/upload", uploadRoute);
 app.use("/basket", basketRoute);
+app.use("/order", orderRoute);
 
 app.listen(PORT, () => console.log(color.bgMagenta("Server is running on " + PORT)));

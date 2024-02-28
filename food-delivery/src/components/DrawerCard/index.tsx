@@ -26,16 +26,29 @@ const backgroundImageStyle = {
 };
 
 export const DrawerCard = ({food} : any) => {
-  const {deleteBasketItem} = React.useContext(basketContext);
+  const {deleteBasketItem, addBasketItem} = React.useContext(basketContext);
   const [count, setCount] = React.useState(food?.count);
-  const handleAdd = () => setCount(count + 1);
+  const handleAdd = () => {
+    setCount(count + 1);
+    addBasketItem({
+      food: food._id,
+      count: count,
+      totalPrice: count * food.price
+    });
+  }
   const handleSub = () => {
     if(count === 1) setCount(1)
-    else setCount(count - 1)
+    else {
+      setCount(count - 1);
+    }
   }
 
   const handleDelete =(value: string)=>{
-    deleteBasketItem(value)
+    addBasketItem({
+      food: food._id,
+      count: count,
+      totalPrice: count * food.price
+    });
   }
   return (
     <>

@@ -5,6 +5,7 @@ import Button from "../CORE/Button";
 import React, { useContext, useState } from "react";
 import { DrawerCard } from "../DrawerCard";
 import { basketContext } from "@/context/BasketProvider";
+import { useRouter } from "next/navigation";
 
 interface IDrawerProps {
   open: boolean;
@@ -12,8 +13,11 @@ interface IDrawerProps {
 }
 
 const MyDrawer = ({ handleClose, open }: IDrawerProps) => {
+  const router = useRouter();
   const { basketFoods } = useContext(basketContext);
-
+  const handleNext = () => {
+    router.push("/order");
+  }
   console.log("basketFoooooooooods", basketFoods);
   return (
     <>
@@ -53,7 +57,7 @@ const MyDrawer = ({ handleClose, open }: IDrawerProps) => {
                     }₮</Typography>
                 </Grid>
                 <Grid>
-                  <Button label="Захиалах" disabled={false} btnType="contained"></Button>
+                  <Button label="Захиалах" disabled={false} btnType="contained" onClick={handleNext}></Button>
                 </Grid>
             </Grid>
           </Box>

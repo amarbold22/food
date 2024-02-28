@@ -3,26 +3,32 @@ import Basket from "../model/basket"
 import MyError from "../utils/myError";
 import { IReq } from "../utils/interface";
 
-export const createBasket = async ( req: Request, res: Response, next: NextFunction) => {
+export const addFoodToBasket = async ( req: IReq, res: Response, next: NextFunction) => {
     try {
-        const newBasket= req.body;
-       
-        // console.log(userId);
-        const data = await Basket.create(newBasket);
-        res.status(200).json({ message: `Basket is created`});
-    } catch (error: any) {
-        next(error);
-    }
-};
+        const userBasket = await Basket.findOne({ user: req.user._id}).populate("foods.food");
+        if(!userBasket){
+            const basket = await (
+                await Basket.create({
+                    user: req.user._id,
+                    foods: {
+                        food: req.body.food,
+                        count: req.body.count
+                    }
+                })
+            ).populate("foods.food");
+            res.status(200).json({ message: "Basket is created", basket});
+        }
+        else{
+            const findIndex = userBasket.foods.findIndex((el) => el.food?.toString() === req.body.food);
+            if(findIndex !== -1){
+                userBasket.foods[findIndex].count = Number(req.body.count);
+                userBasket.totalPrice = Number(req.body.totalPrice);
+            }
 
-export const addFoodToBasket = async ( req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { userId, foodId, count } = req.body;
-        console.log(userId, foodId, count);
-        const userBasket = await Basket.findOne({ user: userId}).populate("foods.food");
-        userBasket?.foods.push({ food: foodId, foods: foodId, count: count });
-        await userBasket?.save();
-        res.status(200).json({ message: "Basket is updated", userBasket});
+            const savedBasket = await ( await userBasket.save()).populate("foods.food");
+            res.status(200).json({ message: "Basket is updated", basket: { foods: savedBasket, totalPrice: userBasket.totalPrice}});
+        }
+        
     } catch (error: any) {
        next(error);
     }
@@ -30,15 +36,16 @@ export const addFoodToBasket = async ( req: Request, res: Response, next: NextFu
 
 export const deleteFoodFromBasket = async ( req: IReq, res: Response, next: NextFunction) => {
         try {
-          
             const { foodId } = req.params;
-            console.log(foodId);
             const userBasket = await Basket.findOne({ user: req.user._id});
+            if(!userBasket){
+                throw new MyError("No basket info found", 400);
+            }
             const findIndex = userBasket?.foods.findIndex((el) => el._id?.equals(foodId));
-            if(findIndex !== undefined)
+            if(findIndex !== -1)
                 userBasket?.foods.splice(findIndex, 1);
-            await userBasket?.save();
-            res.status(200).json({ message: "Food is deleted from basket"});
+            const savedBasket = await( await userBasket?.save()).populate("foods.food");
+            res.status(200).json({ message: "Food is deleted from basket", basket: {foods: savedBasket.foods, totalPrice: savedBasket.totalPrice}});
         } catch (error: any) {
             next(error);
         }
@@ -46,9 +53,11 @@ export const deleteFoodFromBasket = async ( req: IReq, res: Response, next: Next
 
 export const getBasketFoods = async (req: IReq, res: Response, next: NextFunction) => {
     try {
-        const basket = await Basket.findOne({ user: req.user._id}).populate("foods.food");
-        console.log("swgsgwfgfgasggsagsas",basket);
-        res.status(200).json({ message: "Got basket foods successfully", basket});
+        const userBasket = await Basket.findOne({ user: req.user._id}).populate("foods.food");
+        if(!userBasket){
+            throw new MyError("No basket info found", 404);
+        }
+        res.status(200).json({ message: "Got basket foods successfully", basket: { foods: userBasket.foods, totalPrice: userBasket.totalPrice}});
     } catch (error: any) {
         next(error);
     }
