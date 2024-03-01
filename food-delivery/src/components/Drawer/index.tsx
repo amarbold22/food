@@ -1,6 +1,9 @@
-import { Box, Button as MuiButton, Divider, Drawer, Typography, Grid } from "@mui/material";
+"use client"
+import { Box, Button as MuiButton, Divider, Drawer, Typography, Grid, Stack } from "@mui/material";
+import Lottie from "lottie-react";
 import { FaChevronLeft } from "react-icons/fa";
 import Button from "../CORE/Button";
+import emptyBasketData from "../../../public/emptyBasket.json"
 
 import React, { useContext, useState } from "react";
 import { DrawerCard } from "../DrawerCard";
@@ -36,10 +39,26 @@ const MyDrawer = ({ handleClose, open }: IDrawerProps) => {
             </Box>
             <Divider />
             {
-              basketFoods?.map((food: any) => {
-                return <DrawerCard food={food}/>
-              })
+              basketFoods && (basketFoods?.map((food: any) => <DrawerCard key={food?.food?.id} food={food}/>))
             }
+            {!basketFoods && (
+            <Stack
+              height={"90%"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <Box
+                width={200}
+                height={200}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <Lottie animationData={emptyBasketData} loop />
+              </Box>
+              <Typography variant="h6" align="center">
+                Хоосон байна
+              </Typography>
+            </Stack>
+          )}
             <Divider />
             <Grid sx={{display:"flex",
               alignItems:"center",
@@ -57,7 +76,11 @@ const MyDrawer = ({ handleClose, open }: IDrawerProps) => {
                     }₮</Typography>
                 </Grid>
                 <Grid>
-                  <Button label="Захиалах" disabled={false} btnType="contained" onClick={handleNext}></Button>
+                  {
+                    basketFoods ? 
+                      <Button label="Захиалах" disabled={false} btnType="contained" onClick={handleNext}></Button>
+                    : <Button label="Захиалах" disabled={true} btnType="contained" onClick={handleNext}></Button>
+                  }
                 </Grid>
             </Grid>
           </Box>

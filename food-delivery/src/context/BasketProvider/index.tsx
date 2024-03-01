@@ -3,15 +3,13 @@
 import React, { PropsWithChildren, useState, createContext, useContext, useEffect } from 'react'
 import axios from "axios"
 import { UserContext } from '../UserProvider';
-import { array } from 'yup';
+import { toast } from 'react-toastify';
 
 interface IBasketContext {
     getUserBasketFoods: () => Promise<void>;
     addBasketItem: (food: {}) => Promise<void>;
-    updateFoodBasket: (food: {}) => Promise<void>;
     deleteBasketItem: (value: string) => Promise<void>;
     basketFoods: any;
-    loading: boolean;
     foodCount: number;
   }
 
@@ -22,76 +20,74 @@ interface IBasketContext {
 export const BasketProvider = ({ children }: PropsWithChildren) => {
     const [foodCount, setFoodCount] = useState(0);
     const { savedToken } = useContext(UserContext);
-    const [refresh, setRefresh] = useState(false);
     const [basketFoods, setBasketFoods] = useState<{} | null>(null);;
-    const [loading, setLoading] = useState(false);
+    const [refresh, setRefresh] = useState(false);
     const { user } = useContext(UserContext);
-
-    console.log("TT", savedToken)
 
   const getUserBasketFoods = async () => {
     try {
-            console.log("Basket token", savedToken);
-            const { data: {basket} } = await axios.get(`http://localhost:8080/basket`, {
-              headers: {
-                Authorization: `Bearer ${savedToken}`
-              }
-            });
-            console.log("DAATAA", basket.foods);
-             setFoodCount(basket.foods.length);
-            setBasketFoods(basket.foods);
-            console.log("basketfoods =====>", basketFoods);
-    } catch (error) {
-        console.log("Error in getUserBasketFoods func", error);
+        if(user){
+          const { data: {
+            basket: {foods}
+          } } = await axios.get(`http://localhost:8080/basket`, {
+            headers: {
+              Authorization: `Bearer ${savedToken}`
+            }
+          });
+          console.log("DAATAA", foods);
+          setFoodCount(foods.length);
+          setBasketFoods(foods);
+        }
+    } catch (error: any) {
+        toast.error(error.response.data.message);
     }
   }
 
   const addBasketItem = async (food: any) => {
     try {
-      setLoading(true);
-      const { data } = await axios.post(`http://localhost:8080/basket`, food, {
+      const { data: { basket: {foods}} } = await axios.post(`http://localhost:8080/basket`, food, {
             headers: {
               Authorization: `Bearer ${savedToken}`
             }
-      })
-      console.log("hehehhehe", data.foods);
-      setBasketFoods(data.foods);
-      console.log("aaaaa", basketFoods);
-      setLoading(false);
-      setRefresh(!refresh);
+      });
+      setBasketFoods(foods);
     } catch (error) {
         console.log("Error in addBasketfunc", error);
     }
   }
-  const updateFoodBasket = async (food: any) => {
+
+  const updateBasketItem = async (food: any) => {
     try {
-      const { data } = await axios.put(`http://localhost:8080/basket`, food);
-      setBasketFoods(data.foods);
+      const { data: {basket: {foods}}} = await axios.post(`http://localhost:8080/basket`, food, {
+        headers: {
+          Authorization: `Bearer ${savedToken}`
+        }
+      });
     } catch (error) {
-      console.log("updateFoodBasket func error", error);
+      
     }
   }
 
-  const deleteBasketItem = async (value: any) => {
+  const deleteBasketItem = async (food: any) => {
     try {
-      setLoading(true);
         if(user){
-          const data = await axios.delete(`http://localhost:8080/basket/` + value, {
+          const { data: {
+            basket: {foods}
+          } } = await axios.delete(`http://localhost:8080/basket/` + food, {
             headers: { Authorization:`Bearer ${savedToken}`}
           });
+          setBasketFoods(foods);
         }
-        setLoading(false);
-        setRefresh(!refresh)
     } catch (error) {
         console.log("Error in DeleteBasketFunc", error);
     }
   }
   useEffect(() => {
     getUserBasketFoods();
-  }, [savedToken]);
+  }, [savedToken, refresh]);
 
   return (
-    <basketContext.Provider value={{ foodCount, loading, getUserBasketFoods, updateFoodBasket, basketFoods, addBasketItem, deleteBasketItem }}>
+    <basketContext.Provider value={{ foodCount, getUserBasketFoods, basketFoods, addBasketItem, deleteBasketItem }}>
       {children}
     </basketContext.Provider>
   )

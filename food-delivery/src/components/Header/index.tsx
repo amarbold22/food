@@ -16,7 +16,6 @@ import { basketContext } from '@/context/BasketProvider';
 const Header = () => {
     const { foodCount } = useContext(basketContext);
     const { user } = useContext(UserContext);
-    console.log(user);
     const router = useRouter();
     const [drawer, setDrawer] = useState(false);
     const handleOpenDrawer = () => setDrawer(true);

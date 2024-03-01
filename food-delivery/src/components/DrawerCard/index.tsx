@@ -29,27 +29,28 @@ export const DrawerCard = ({food} : any) => {
   const {deleteBasketItem, addBasketItem} = React.useContext(basketContext);
   const [count, setCount] = React.useState(food?.count);
   const handleAdd = () => {
-    setCount(count + 1);
+    console.log("adding food", food);
     addBasketItem({
-      food: food._id,
-      count: count,
-      totalPrice: count * food.price
+      foodId: food._id,
+      count: food.count + 1,
+      totalPrice: (food.count + 1) * food.price
     });
+    setCount(count + 1);
   }
   const handleSub = () => {
-    if(count === 1) setCount(1)
+    if(count === 1){
+      deleteBasketItem(food._id);
+    }
     else {
+      addBasketItem({
+        foodId: food._id,
+        count: food.count - 1,
+        totalPrice: (food.count - 1) * food.price
+      });
       setCount(count - 1);
     }
   }
 
-  const handleDelete =(value: string)=>{
-    addBasketItem({
-      food: food._id,
-      count: count,
-      totalPrice: count * food.price
-    });
-  }
   return (
     <>
       <Box sx={style} m={5}>
@@ -72,7 +73,7 @@ export const DrawerCard = ({food} : any) => {
             <Grid item xs={1} position={"relative"}>
               <MuiButton sx={{ ml: 50, position: "absolute" }}>
                 <Close onClick={() => {
-                  handleDelete(food?.food?._id);
+                  deleteBasketItem(food._id);
                 }}/>
               </MuiButton>
             </Grid>

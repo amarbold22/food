@@ -38,9 +38,9 @@ const FoodCard = ({food} : ICardProps) => {
     else setCount(count - 1);
   }
   const handleAddBasket = () => {
-    console.log("handleAddBasket");
+    console.log("add", food);
     addBasketItem({
-      food: food._id,
+      foodId: food._id,
       count: count,
       totalPrice: food.price * count
     });

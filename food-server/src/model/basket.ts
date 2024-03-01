@@ -13,9 +13,12 @@ const basketSchema = new Schema({
         ref: "Food",
       },
       count:{type: Number, default:1},
-    },
-  ],
-  totalPrice: Number
+      totalPrice: {
+        type: Number,
+        default: 0
+      }
+    }
+  ]
 });
 
 const Basket = model("Basket", basketSchema);

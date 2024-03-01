@@ -11,22 +11,31 @@ export const addFoodToBasket = async ( req: IReq, res: Response, next: NextFunct
                 await Basket.create({
                     user: req.user._id,
                     foods: {
-                        food: req.body.food,
-                        count: req.body.count
-                    }
+                        food: req.body.foodId,
+                        count: req.body.count,
+                        totalPrice: req.body.totalPrice
+                    },
                 })
             ).populate("foods.food");
             res.status(200).json({ message: "Basket is created", basket});
         }
         else{
-            const findIndex = userBasket.foods.findIndex((el) => el.food?.toString() === req.body.food);
-            if(findIndex !== -1){
-                userBasket.foods[findIndex].count = Number(req.body.count);
-                userBasket.totalPrice = Number(req.body.totalPrice);
+            if(userBasket.foods.length){
+                const findIndex = userBasket.foods.findIndex((el) => el.food?._id.equals(req.body.foodId));
+                if(findIndex !== -1){
+                    userBasket.foods[findIndex].count = Number(req.body.count);
+                    userBasket.foods[findIndex].totalPrice = Number(req.body.totalPrice);
+                }
+                else{
+                    userBasket.foods.push({food: req.body.foodId, count: req.body.count, totalPrice: req.body.totalPrice});
+                }
+                const savedBasket = await ( await userBasket.save()).populate("foods.food");
+                console.log("BACKEND CHECK", savedBasket);
+                res.status(200).json({ message: "Basket is updated", basket: savedBasket.foods});
             }
-
-            const savedBasket = await ( await userBasket.save()).populate("foods.food");
-            res.status(200).json({ message: "Basket is updated", basket: { foods: savedBasket, totalPrice: userBasket.totalPrice}});
+            else{
+                res.status(400).json({ message: "Basket is empty"});
+            }
         }
         
     } catch (error: any) {
@@ -45,7 +54,7 @@ export const deleteFoodFromBasket = async ( req: IReq, res: Response, next: Next
             if(findIndex !== -1)
                 userBasket?.foods.splice(findIndex, 1);
             const savedBasket = await( await userBasket?.save()).populate("foods.food");
-            res.status(200).json({ message: "Food is deleted from basket", basket: {foods: savedBasket.foods, totalPrice: savedBasket.totalPrice}});
+            res.status(200).json({ message: "Food is deleted from basket", basket: {foods: savedBasket.foods}});
         } catch (error: any) {
             next(error);
         }
@@ -57,7 +66,7 @@ export const getBasketFoods = async (req: IReq, res: Response, next: NextFunctio
         if(!userBasket){
             throw new MyError("No basket info found", 404);
         }
-        res.status(200).json({ message: "Got basket foods successfully", basket: { foods: userBasket.foods, totalPrice: userBasket.totalPrice}});
+        res.status(200).json({ message: "Got basket foods successfully", basket: { foods: userBasket.foods}});
     } catch (error: any) {
         next(error);
     }

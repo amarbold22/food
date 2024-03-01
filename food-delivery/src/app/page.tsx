@@ -60,10 +60,10 @@ export default function Home() {
         </Box>
       </Box>
       <Grid container sx={{width: 'full', backgroundColor: "white", gap: "20px"}} display="flex" flexDirection="column" alignItems="center" py={20}>
-        <Stack direction="row" spacing={20} my="10px" maxWidth="100%">
+        <Stack direction="row" my="10px" spacing="30px">
         {AdCardArr?.map((el) => (
-            <Grid key={el.id} boxShadow={1} spacing="15px" sx={{ border: "1px solid #d1d1d1", maxWidth: "355px", maxHeight: "200px", p: "16px", borderRadius: "20px"}}>
-              <Box color="#18BA51" width="300px">{el.icon}</Box>
+            <Grid key={el.id} boxShadow={1} sx={{ border: "1px solid #d1d1d1", maxWidth: "355px", maxHeight: "200px", p: "16px", borderRadius: "20px"}}>
+              <Box color="#18BA51" width="260px">{el.icon}</Box>
               <Stack spacing="4px">
                 <Typography sx={{fontWeight: "700"}}>{el.label}</Typography>
                 <Typography sx={{color: "grey"}}>{el.description}</Typography>
