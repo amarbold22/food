@@ -14,7 +14,7 @@ import XIcon from '@mui/icons-material/X';
 const Footer = () => {
     const footerArr = ['Нүүр', 'Холбоо барих', 'Хоолны цэс', 'Үйлчилгээний нөхцөл', 'Хүргэлтийн бүс', 'Нууцлалын бодлого'];
   return (
-    <Grid container sx={{backgroundColor: "#18BA51", position: "relative"}}>
+    <Grid container sx={{backgroundColor: "#18BA51", position: "relative", overflow: "hidden"}}>
         <Grid item xs={12} sx={{ textAlign: "center", alignItems: "center", pt: 10, px: 5}}>
             <Box>
                 <Stack sx={{justifyContent: "center", alignItems: "center", width: "inherit"}} spacing={8}>

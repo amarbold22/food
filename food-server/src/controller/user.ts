@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { IReq } from "../utils/interface";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../model/user";
@@ -53,6 +54,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       process.env.JWT_PRIVATE_KEY as string,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
+    console.log("user.ts token", token);
     res.status(201).json({ message: "Хэрэглэгч амжилттай нэвтэрлээ", token, user });
   } catch (error) {
     next(error);

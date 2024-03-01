@@ -47,9 +47,9 @@ const userSchema = new Schema({
       createdAt: Date,
     },
     address: {
-      khoroo: { type: String },
-      duureg: { type: String },
-      buildingNo: { type: Number },
+      khoroo: String,
+      duureg: String,
+      buildingNo: Number,
       additionalInfo: String
     },
     delivery: {

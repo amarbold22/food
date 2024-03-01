@@ -30,15 +30,14 @@ interface IUserContext {
     signup: (email: string, password: string, address: string, name: string) => void;
     logout: () => void;
     verify: () => void;
-    token: any;
+    savedToken: any;
 }
 
 export const UserContext = createContext<IUserContext>({} as IUserContext)
 
 export const UserProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<object | null>(null);
-  const [token, setToken] = useState<object | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [savedToken, setSavedToken] = useState("");
   const router = useRouter();
     const [userInfo, setUserInfo] = useState<IUser>({
         name: "",
@@ -58,33 +57,35 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
 
     const login = async (email: string, password: string) => {
       try {
-        setLoading(true);
         const { data: {
           token, user
         } } = await axios.post("http://localhost:8080/auth/login", {
         email: email,
         pass: password
       });
-      localStorage.setItem("token", JSON.stringify(token));
+      localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-
+      setUser(user);
+      setSavedToken(token);
       console.log("Nevterlee", user, token);
       router.replace("/");
+     
       } catch (error) {
         console.log(error);
         toast.error("Login хийх үед алдаа гарлаа"); 
       }
-      finally {
-        setLoading(false);
-      }
     }
+
     const checkToken = () => {
-      if(localStorage.getItem("token")){
-        setUser(JSON.parse(localStorage.getItem("user")!));
-        setToken(JSON.parse(localStorage.getItem("token")!));
+      const tokenCheck = localStorage.getItem("token")!;
+      const userCheck = JSON.parse(localStorage.getItem("user")!);
+      if(tokenCheck){
+        console.log("tokenfirst", tokenCheck);
+        setUser(userCheck);
+        setSavedToken(tokenCheck);
       }
-      console.log("checkToken worked");
     }
+    
     useEffect(() => {
       checkToken();
     }, []);
@@ -97,7 +98,6 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
           name: name,
           address: signUpInfo.address
         });
-        
         router.push("/");
         console.log(data);
       } catch (error) {
@@ -110,7 +110,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       setUser(null);
-      setToken(null);
+      setSavedToken("");
     }
 
     const verify = () => {
@@ -122,7 +122,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     }
 
   return (
-    <UserContext.Provider value={{ user, userInfo, signUpInfo, login, signup, logout, verify, token }}>
+    <UserContext.Provider value={{ user, userInfo, signUpInfo, login, signup, logout, verify, savedToken }}>
       {children}
     </UserContext.Provider>
   )
