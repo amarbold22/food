@@ -25,6 +25,7 @@ export const addFoodToBasket = async ( req: IReq, res: Response, next: NextFunct
                 if(findIndex !== -1){
                     userBasket.foods[findIndex].count = Number(req.body.count);
                     userBasket.foods[findIndex].totalPrice = Number(req.body.totalPrice);
+                    console.log("first", userBasket);
                 }
                 else{
                     userBasket.foods.push({food: req.body.foodId, count: req.body.count, totalPrice: req.body.totalPrice});
