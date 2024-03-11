@@ -9,8 +9,8 @@ interface IBasketContext {
     getUserBasketFoods: () => Promise<void>;
     addBasketItem: (food: {}) => Promise<void>;
     deleteBasketItem: (value: string) => Promise<void>;
+    updateBasketItem: (food: {}) => Promise<void>;
     basketFoods: any;
-    foodCount: number;
   }
 
   export const basketContext = createContext<IBasketContext>(
@@ -18,7 +18,6 @@ interface IBasketContext {
   );
 
 export const BasketProvider = ({ children }: PropsWithChildren) => {
-    const [foodCount, setFoodCount] = useState(0);
     const { savedToken } = useContext(UserContext);
     const [basketFoods, setBasketFoods] = useState<{} | null>(null);;
     const [refresh, setRefresh] = useState(false);
@@ -35,7 +34,6 @@ export const BasketProvider = ({ children }: PropsWithChildren) => {
             }
           });
           console.log("DAATAA", foods);
-          setFoodCount(foods.length);
           setBasketFoods(foods);
         }
     } catch (error: any) {
@@ -45,12 +43,13 @@ export const BasketProvider = ({ children }: PropsWithChildren) => {
 
   const addBasketItem = async (food: any) => {
     try {
-      const { data: { basket: {foods}} } = await axios.post(`http://localhost:8080/basket`, food, {
+      const { data: { basket: {foods}, message} } = await axios.post(`http://localhost:8080/basket`, food, {
             headers: {
               Authorization: `Bearer ${savedToken}`
             }
       });
       setBasketFoods(foods);
+      toast.success(message);
     } catch (error) {
         console.log("Error in addBasketfunc", error);
     }
@@ -58,13 +57,15 @@ export const BasketProvider = ({ children }: PropsWithChildren) => {
 
   const updateBasketItem = async (food: any) => {
     try {
-      const { data: {basket: {foods}}} = await axios.post(`http://localhost:8080/basket`, food, {
+      const { data: {basket, message}} = await axios.post(`http://localhost:8080/basket`, food, {
         headers: {
           Authorization: `Bearer ${savedToken}`
         }
       });
+      await setBasketFoods(basket);
+      toast.success(message);
     } catch (error) {
-      
+      console.log("Eroooor in updateBasket", error);
     }
   }
 
@@ -83,11 +84,13 @@ export const BasketProvider = ({ children }: PropsWithChildren) => {
     }
   }
   useEffect(() => {
-    getUserBasketFoods();
-  }, [savedToken, refresh]);
+    if(user){
+      getUserBasketFoods();
+    }
+  }, [user]);
 
   return (
-    <basketContext.Provider value={{ foodCount, getUserBasketFoods, basketFoods, addBasketItem, deleteBasketItem }}>
+    <basketContext.Provider value={{ getUserBasketFoods, basketFoods, addBasketItem, deleteBasketItem, updateBasketItem }}>
       {children}
     </basketContext.Provider>
   )

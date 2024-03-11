@@ -1,9 +1,10 @@
 "use client"
 
-import React, { PropsWithChildren, useState,createContext, useEffect } from 'react'
+import React, { PropsWithChildren, useState,createContext, useEffect, useContext } from 'react'
 import { useRouter } from "next/navigation"
 import axios from "axios"
 import { toast } from 'react-toastify'
+import { basketContext } from '../BasketProvider'
 
 interface IUser{
     name: string,
@@ -30,6 +31,7 @@ interface IUserContext {
     signup: (email: string, password: string, address: string, name: string) => void;
     logout: () => void;
     verify: () => void;
+    order: (duureg: string, horoo: string, buildingNo: string, info: string, phoneNumber: string, method: string) => Promise<void>;
     savedToken: any;
 }
 
@@ -92,17 +94,58 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
 
     const signup = async (email: string, password: string, name: string) => {
       try {
-        const data = await axios.post("http://localhost:8080/auth/signup", {
+        const { data: {userInfo, token}} = await axios.post("http://localhost:8080/auth/signup", {
           email: email,
           password: password,
           name: name,
           address: signUpInfo.address
         });
-        router.push("/");
-        console.log(data);
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(userInfo));
+        setUser(userInfo);
+        setSavedToken(token);
+        router.replace("/");
+        // console.log(data);
       } catch (error) {
         console.log(error);
         toast.error("Signup хийх үед алдаа гарлаа");
+      }
+    }
+
+    const order = async (duureg: string, horoo: string, buildingNo: string, info: string, phoneNumber: string, method: string) => {
+      const { basketFoods } = useContext(basketContext);
+      console.log(basketFoods, "basketFoods");
+
+      let orderInfo = {
+        orderNo: "#" + Math.floor(Math.random() * 10000),
+        foods: basketFoods,
+        payment: {
+          paymentAmount: basketFoods.totalPrice,
+          method: "",
+        },
+        address: {
+          khoroo: "",
+          duureg: "",
+          buildingNo: "",
+          info: "",
+        },
+        phoneNumber: "",
+      };
+      orderInfo.address.duureg = duureg;
+      orderInfo.address.khoroo = horoo;
+      orderInfo.address.buildingNo = buildingNo;
+      orderInfo.address.info = info;
+      orderInfo.payment.method = method;
+      orderInfo.phoneNumber = phoneNumber;
+      try {
+        const { data : { message }} = await axios.post(`http://localhost:8080/order`, {orderInfo: orderInfo} , {
+          headers: {
+            Authorization: `Bearer ${savedToken}`
+          }
+        });
+          toast.error(message);
+      } catch (error) {
+        console.log(error, "error");
       }
     }
 
@@ -122,7 +165,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     }
 
   return (
-    <UserContext.Provider value={{ user, userInfo, signUpInfo, login, signup, logout, verify, savedToken }}>
+    <UserContext.Provider value={{ user, userInfo, signUpInfo, login, signup, logout, verify, order, savedToken }}>
       {children}
     </UserContext.Provider>
   )

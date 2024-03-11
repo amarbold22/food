@@ -13,8 +13,8 @@ export const addFoodToBasket = async ( req: IReq, res: Response, next: NextFunct
                     foods: {
                         food: req.body.foodId,
                         count: req.body.count,
-                        totalPrice: req.body.totalPrice
                     },
+                    totalPrice: req.body.totalPrice
                 })
             ).populate("foods.food");
             res.status(200).json({ message: "Basket is created", basket});
@@ -24,11 +24,11 @@ export const addFoodToBasket = async ( req: IReq, res: Response, next: NextFunct
                 const findIndex = userBasket.foods.findIndex((el) => el.food?._id.equals(req.body.foodId));
                 if(findIndex !== -1){
                     userBasket.foods[findIndex].count = Number(req.body.count);
-                    userBasket.foods[findIndex].totalPrice = Number(req.body.totalPrice);
-                    console.log("first", userBasket);
+                    userBasket.totalPrice = Number(req.body.totalPrice);
                 }
                 else{
-                    userBasket.foods.push({food: req.body.foodId, count: req.body.count, totalPrice: req.body.totalPrice});
+                    userBasket.foods.push({food: req.body.foodId, count: req.body.count});
+                    userBasket.totalPrice = Number(req.body.totalPrice) + userBasket.totalPrice!;
                 }
                 const savedBasket = await ( await userBasket.save()).populate("foods.food");
                 console.log("BACKEND CHECK", savedBasket);

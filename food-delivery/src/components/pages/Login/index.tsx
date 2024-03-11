@@ -9,6 +9,7 @@ import React, { useContext } from 'react';
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { UserContext, UserProvider } from '@/context/UserProvider';
+import { useRouter } from 'next/navigation';
 // import { UserContext } from '@/context/UserProvider';
 
 const validationSchema = yup.object({
@@ -25,6 +26,7 @@ const validationSchema = yup.object({
 
 const LoginPage = () => {
   const { login } = useContext(UserContext);
+  const router = useRouter();
 
   const formik = useFormik({
     onSubmit: ({ email, password }) => {
@@ -61,10 +63,10 @@ const LoginPage = () => {
             showPassword
           />
           </Box>
-          <Link href="/recovery/step1">
             {/* <Typography textAlign="end" color="gray" sx={{mb: "20px"}}>Нууц үг сэргээх</Typography> */}
-            <Button label="Нууц үг сэргээх" btnType="text" disabled={false} href="/recovery/step1"/>
-          </Link>
+            <Button label="Нууц үг сэргээх" btnType="text" disabled={false} onClick={() => {
+              router.push("/recovery/step1");
+            }}/>
           <Button label="Нэвтрэх" disabled={false} btnType="outlined" onClick={formik.handleSubmit}/>
           <Typography textAlign="center" sx={{my: "20px"}}>Эсвэл</Typography>
           <Button label="Бүртгүүлэх" disabled={false} btnType="contained" href="/signup"></Button>

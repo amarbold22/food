@@ -13,11 +13,12 @@ import { useRouter } from "next/navigation";
 interface IDrawerProps {
   open: boolean;
   handleClose: () => void;
+  basketFoods: [];
 }
 
-const MyDrawer = ({ handleClose, open }: IDrawerProps) => {
+const MyDrawer = ({ handleClose, open, basketFoods }: IDrawerProps) => {
   const router = useRouter();
-  const { basketFoods } = useContext(basketContext);
+  // const { basketFoods } = useContext(basketContext);
   const handleNext = () => {
     router.push("/order");
   }

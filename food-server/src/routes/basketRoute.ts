@@ -10,6 +10,7 @@ const router = Router();
 router
   .route("/")
   .get(authenticate, getBasketFoods)
+  .put(authenticate, addFoodToBasket)
   .post(authenticate, addFoodToBasket)
 router.route("/:foodId")
   .delete(authenticate, deleteFoodFromBasket);

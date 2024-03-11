@@ -59,7 +59,8 @@ const userSchema = new Schema({
         default: 'Pending'
       },
       deliveredAt: Date
-    }
+    },
+    products: []
   }]
 }, {
   timestamps: true

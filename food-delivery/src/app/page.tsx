@@ -43,11 +43,9 @@ const AdCardArr = [
 export default function Home() {
   const { getCategories, categories } = useContext(categoryContext);
   const { getFoods, foods } = useContext(foodContext);
-  // // const { getFoods, foods } = useContext(foodContext);
 
   useEffect(() => {
     getCategories();
-    // getFoods();
   }, []);
 
   return (

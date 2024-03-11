@@ -15,13 +15,20 @@ export const signup = async (req: Request, res: Response) => {
       { email: user.email },
       process.env.JWT_PRIVATE_KEY as string,
       {
-        expiresIn: "5m",
+        expiresIn: "1d",
       }
     );
     sendEmail({ email: user.email, token: verifyToken });
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.JWT_PRIVATE_KEY as string,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
     res.status(201).json({
       message:
-        "Шинэ хэрэглэгч амжилттай бүртгэгдлээ.", userInfo: user
+        "Шинэ хэрэглэгч амжилттай бүртгэгдлээ.", userInfo: user, token
     });
   } catch (error) {
     res

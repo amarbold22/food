@@ -14,7 +14,7 @@ import { UserContext } from '@/context/UserProvider';
 import { basketContext } from '@/context/BasketProvider';
 
 const Header = () => {
-    const { foodCount } = useContext(basketContext);
+    const { basketFoods } = useContext(basketContext);
     const { user } = useContext(UserContext);
     const router = useRouter();
     const [drawer, setDrawer] = useState(false);
@@ -53,7 +53,7 @@ const Header = () => {
             </Box>
             <Button onClick={handleOpenDrawer}>
                 <Stack direction="row"  sx={{color: "black"}} spacing="10px" px={2}>
-                    <Badge badgeContent={foodCount} color="primary">
+                    <Badge badgeContent={basketFoods?.length} color="primary">
                         <ShoppingBasketOutlined/>
                     </Badge>
                     <Typography sx={{fontWeight: "bold"}}>Сагс</Typography>
@@ -76,7 +76,7 @@ const Header = () => {
                     </Button>
                 )
             }
-            <MyDrawer open={drawer} handleClose={handleCloseDrawer} />
+            <MyDrawer open={drawer} handleClose={handleCloseDrawer} basketFoods={basketFoods} />
             </Stack>
     </Stack>
   )

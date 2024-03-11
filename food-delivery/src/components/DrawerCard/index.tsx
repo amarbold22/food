@@ -26,28 +26,28 @@ const backgroundImageStyle = {
 };
 
 export const DrawerCard = ({food} : any) => {
-  const {deleteBasketItem, addBasketItem} = React.useContext(basketContext);
+  const {deleteBasketItem, addBasketItem, updateBasketItem} = React.useContext(basketContext);
   const [count, setCount] = React.useState(food?.count);
   const handleAdd = () => {
     console.log("adding food", food);
-    addBasketItem({
-      foodId: food._id,
+    setCount(count + 1);
+    updateBasketItem({
+      foodId: food.food._id,
       count: food.count + 1,
       totalPrice: (food.count + 1) * food.price
     });
-    setCount(count + 1);
   }
   const handleSub = () => {
     if(count === 1){
       deleteBasketItem(food._id);
     }
     else {
-      addBasketItem({
-        foodId: food._id,
+      setCount(count - 1);
+      updateBasketItem({
+        foodId: food.food._id,
         count: food.count - 1,
         totalPrice: (food.count - 1) * food.price
       });
-      setCount(count - 1);
     }
   }
 
@@ -80,7 +80,7 @@ export const DrawerCard = ({food} : any) => {
             <Grid display={"flex"} flexDirection={"column"}>
               <Typography fontWeight={600}>{food?.food?.name}</Typography>
               <Typography sx={{ color: "#18BA51" }} fontWeight={600}>
-                {count * food?.food?.price}₮
+                {food?.count * food?.food?.price}₮
               </Typography>
 
               <Typography color={"gray"}>
