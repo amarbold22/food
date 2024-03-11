@@ -50,29 +50,8 @@ const SmFood = (food: Props) => {
                 </Stack>
             </Box>
             <Box sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-            <Button onClick={handleSub}>
-                  <Remove
-                    sx={{
-                      bgcolor: "#18BA51",
-                      color: "white",
-                      width: "70%",
-                      height: "30px",
-                      borderRadius: 2,
-                    }}
-                  />
-                </Button>
-                <Typography>{count}</Typography>
-                <Button onClick={handleAdd}>
-                  <Add
-                    sx={{
-                      bgcolor: "#18BA51",
-                      color: "white",
-                      width: "70%",
-                      height: "30px",
-                      borderRadius: 2,
-                    }}
-                  />
-                </Button>
+              <Typography sx={{fontWeight: "bold"}}>Тоо ширхэг:</Typography>
+              <Typography sx={{fontWeight: "bold"}}>{count}</Typography>
             </Box>
         </Stack>
     </Box>

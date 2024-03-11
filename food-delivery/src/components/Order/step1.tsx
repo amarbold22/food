@@ -37,7 +37,6 @@ const apartments = [
 ];
 
 const Order1 = ({ formik }: Props) => {
-  console.log(formik, "formik")
   const duureg = [
     "Баянзүрх дүүрэг",
     "Баянгол дүүрэг",

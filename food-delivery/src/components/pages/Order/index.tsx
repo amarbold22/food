@@ -26,8 +26,7 @@ const OrderPage = (props: Props) => {
   const formik = useFormik({
     onSubmit: ({ duureg, horoo, buildingNo, info, phoneNumber, method }) => {
       console.log("ON SUBMIT WORKING");
-      order();
-      // createOrder(duureg, horoo, buildingNo, info, phoneNumber, method);
+      order(duureg, horoo, buildingNo, info, phoneNumber, method);
     },
     initialValues: {
       duureg: "",

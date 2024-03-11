@@ -16,9 +16,7 @@ const Order2 = ({basketFoods, formik}: IOrderProps) => {
   console.log("asaasas", basketFoods);
   const {order} = useContext(UserContext)
   const [initial, setInitial] = useState(0);
-  const handleOrder = () => {
-    order();
-  }
+
   return (
     <Stack sx={{width: "800px", height: "800px"}}>
       <Box sx={{width: "full", margin: "10px", display: "flex", alignItems: "center"}}>
@@ -57,9 +55,7 @@ const Order2 = ({basketFoods, formik}: IOrderProps) => {
             </Typography>
           </Grid>
           <Grid xs={6}>
-            <Button label="Захиалах" disabled={false} btnType='contained' onClick={() => {
-              handleOrder();
-            }}></Button>
+            <Button label="Захиалах" disabled={false} btnType='contained' onClick={formik.handleSubmit}></Button>
           </Grid>
         </Grid>
       </Box>

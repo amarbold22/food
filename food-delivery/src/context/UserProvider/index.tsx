@@ -113,14 +113,14 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     }
 
     const order = async (duureg: string, horoo: string, buildingNo: string, info: string, phoneNumber: string, method: string) => {
-      const { basketFoods } = useContext(basketContext);
-      console.log(basketFoods, "basketFoods");
+      // const { basketFoods } = useContext(basketContext);
+      // console.log(basketFoods, "basketFoods");
 
       let orderInfo = {
         orderNo: "#" + Math.floor(Math.random() * 10000),
-        foods: basketFoods,
+        foods: null,
         payment: {
-          paymentAmount: basketFoods.totalPrice,
+          paymentAmount: null,
           method: "",
         },
         address: {
@@ -137,6 +137,14 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
       orderInfo.address.info = info;
       orderInfo.payment.method = method;
       orderInfo.phoneNumber = phoneNumber;
+      // orderInfo.payment.paymentAmount =
+      //   basketFoods?.map((food: any) => {
+      //     return food?.count * food?.food?.price;
+      // })
+      // .filter((el: any) => (typeof el === "number"))
+      // ?.reduce((prev: any, next: any) => {
+      //     return prev + next;
+      // }, 0);
       try {
         const { data : { message }} = await axios.post(`http://localhost:8080/order`, {orderInfo: orderInfo} , {
           headers: {
