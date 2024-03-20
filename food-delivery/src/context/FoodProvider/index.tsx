@@ -4,6 +4,7 @@ import React, { PropsWithChildren, useState, createContext } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
+import myAxios from "@/utils/axios";
 
 interface ICreateFoodContext {
   getFoods: () => Promise<void>;
@@ -24,7 +25,7 @@ export const FoodProvider = ({ children }: PropsWithChildren) => {
   const [foods, setFoods] = useState([]);
   const getFoods = async () => {
     try {
-      const { data } = await axios.get("https://food-dusky.vercel.app/foods");
+      const { data } = await myAxios.get("/foods");
       setFoods(data.foods);
     } catch (error) {
       console.log("Error in getFoods FUNC");

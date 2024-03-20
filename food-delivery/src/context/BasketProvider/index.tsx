@@ -10,6 +10,7 @@ import React, {
 import axios from "axios";
 import { UserContext } from "../UserProvider";
 import { toast } from "react-toastify";
+import myAxios from "@/utils/axios";
 
 interface IBasketContext {
   getUserBasketFoods: () => Promise<void>;
@@ -36,7 +37,7 @@ export const BasketProvider = ({ children }: PropsWithChildren) => {
           data: {
             basket: { foods },
           },
-        } = await axios.get(`https://food-dusky.vercel.app/basket`, {
+        } = await myAxios.get(`/basket`, {
           headers: {
             Authorization: `Bearer ${savedToken}`,
           },
@@ -56,7 +57,7 @@ export const BasketProvider = ({ children }: PropsWithChildren) => {
           basket: { foods },
           message,
         },
-      } = await axios.post(`https://food-dusky.vercel.app/basket`, food, {
+      } = await myAxios.post(`/basket`, food, {
         headers: {
           Authorization: `Bearer ${savedToken}`,
         },
@@ -72,7 +73,7 @@ export const BasketProvider = ({ children }: PropsWithChildren) => {
     try {
       const {
         data: { basket, message },
-      } = await axios.post(`https://food-dusky.vercel.app//basket`, food, {
+      } = await myAxios.post(`/basket`, food, {
         headers: {
           Authorization: `Bearer ${savedToken}`,
         },
@@ -91,12 +92,9 @@ export const BasketProvider = ({ children }: PropsWithChildren) => {
           data: {
             basket: { foods },
           },
-        } = await axios.delete(
-          `https://food-dusky.vercel.app//basket/` + food,
-          {
-            headers: { Authorization: `Bearer ${savedToken}` },
-          }
-        );
+        } = await myAxios.delete(`/basket/` + food, {
+          headers: { Authorization: `Bearer ${savedToken}` },
+        });
         setBasketFoods(foods);
       }
     } catch (error) {

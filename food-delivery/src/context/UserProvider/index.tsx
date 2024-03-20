@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { basketContext } from "../BasketProvider";
+import myAxios from "@/utils/axios";
 
 interface IUser {
   name: string;
@@ -79,7 +80,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     try {
       const {
         data: { token, user },
-      } = await axios.post("https://food-dusky.vercel.app/auth/login", {
+      } = await myAxios.post("/auth/login", {
         email: email,
         pass: password,
       });
@@ -113,7 +114,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     try {
       const {
         data: { userInfo, token },
-      } = await axios.post("https://food-dusky.vercel.app/auth/signup", {
+      } = await myAxios.post("/auth/signup", {
         email: email,
         password: password,
         name: name,
@@ -174,8 +175,8 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     try {
       const {
         data: { message },
-      } = await axios.post(
-        `https://food-dusky.vercel.app/order`,
+      } = await myAxios.post(
+        `/order`,
         { orderInfo: orderInfo },
         {
           headers: {

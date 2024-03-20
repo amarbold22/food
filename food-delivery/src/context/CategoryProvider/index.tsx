@@ -4,6 +4,7 @@ import React, { PropsWithChildren, useState, createContext } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
+import myAxios from "@/utils/axios";
 
 interface ICreateCatContext {
   getCategories: () => void;
@@ -23,9 +24,7 @@ export const CategoryProvider = ({ children }: PropsWithChildren) => {
   const [categories, setCategories] = useState([]);
   const getCategories = async () => {
     try {
-      const { data } = await axios.get(
-        "https://food-dusky.vercel.app//categories"
-      );
+      const { data } = await myAxios.get("/categories");
       setCategories(data.categories);
     } catch (error) {
       console.log("Error in getCategory FUNC");
