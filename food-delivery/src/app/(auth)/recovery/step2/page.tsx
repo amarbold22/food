@@ -1,3 +1,4 @@
+"use server";
 import React from "react";
 import PasswordRecoveryPage2 from "@/components/pages/PasswordRecovery/PasswordRecoveryPage2";
 
